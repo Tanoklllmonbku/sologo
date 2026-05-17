@@ -31,7 +31,7 @@ CREATE TABLE cities (
 
 CREATE INDEX idx_cities_name ON cities(name);
 
--- Отели (обновлённая версия)
+-- Отели
 CREATE TABLE hotels (
     hotel_id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
@@ -41,10 +41,10 @@ CREATE TABLE hotels (
     price_per_night INTEGER NOT NULL,
     avg_city_price INTEGER NOT NULL,
     rating FLOAT DEFAULT 0,
-    capacity INTEGER DEFAULT 10,  -- ← максимальное количество человек
-    manager_phones TEXT,  -- ← массив телефонов в JSON (например: '["+71234567890", "+79876543210"]')
+    capacity INTEGER DEFAULT 10,
+    manager_phones TEXT,
     main_image VARCHAR(500),
-    room_images TEXT,
+    room_images VARCHAR(500)[],
     status INTEGER DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
