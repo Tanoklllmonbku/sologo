@@ -1,7 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from typing import AsyncGenerator
 
-from backend.models import Base
 from .config import settings
 
 # Создаём движок (engine) — подключение к БД
