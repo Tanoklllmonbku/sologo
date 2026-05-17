@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from .routers import users, hotels, bookings, cities, routes, safe_zones, lost_report, weather
+from routes import users, hotels, bookings, cities, routes, safe_zones, lost_report, weather
 
 app = FastAPI(title="SoloGo API")
 
