@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1def1d6d-206b-4fd5-b0fb-982a960eef97" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/SoloGoApplication.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/mapper/BookingMapper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/mapper/CityMapper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/mapper/HotelMapper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/mapper/LostReportMapper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/mapper/RouteMapper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/mapper/SafeZoneMapper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/mapper/UserMapper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/mapper/WeatherMapper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/di/AppModule.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/di/NetworkModule.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/di/RepositoryModule.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/di/UseCaseModule.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/model/Booking.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/model/City.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/model/Hotel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/model/LostReport.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/model/Route.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/model/SafeZone.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/model/User.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/model/Weather.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/AuthRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/BookingRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/CityRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/HotelRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/LostRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/RouteRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/SafeZoneRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/UserRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/repository/WeatherRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/auth/IsLoggedInUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/auth/LogOutUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/auth/LoginUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/auth/RegisterUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/booking/CancelBookingUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/booking/CreateBookingUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/booking/GetMyBookingsUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/booking/admin/AdminGetBookingStatusUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/booking/admin/AdminUpdateBookingUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/booking/admin/GetAllBookingsUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/city/GetCitiesUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/city/GetCityByIdUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/city/admin/CreateCityUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/city/admin/DeleteCityUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/city/admin/UpdateCityUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/hotel/GetHotelByIdUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/hotel/GetHotelUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/hotel/admin/CreateHotelUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/hotel/admin/DeleteHotelUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/hotel/admin/RestoreHotelUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/hotel/admin/UpdateHotelUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/lost/GetMyLostReportsUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/lost/ReportLostUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/lost/admin/GetAllLostReportsUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/lost/admin/UpdateLostReportStatusUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/route/GetRouteByIdUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/route/GetRoutesUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/route/admin/CreateRouteUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/route/admin/DeleteRouteUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/route/admin/UpdateRouteUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/safezone/GetSafeZoneUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/safezone/admin/CreateSafeZoneUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/safezone/admin/DeleteSafeZoneUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/safezone/admin/UpdateSafeZoneUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/user/GetProfileUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/user/UpdatePasswordUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/user/UpdateProfileUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/user/admin/AdminUpdateUserUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/user/admin/GetAllUserUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/domain/usecase/weather/GetWeatherUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/auth/LoginRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/auth/RegisterRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/booking/BookingRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/booking/BookingStatusUpdateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/city/CityCreateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/city/CityUpdateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/hotel/HotelCreateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/hotel/HotelUpdateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/lost/LostReportRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/lost/LostReportStatusUpdateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/route/RouteCreateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/route/RouteUpdateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/safezone/SafeZoneCreateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/safezone/SafeZoneUpdateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/user/UserUpdatePasswordRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/request/user/UserUpdateRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/auth/AuthResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/booking/BookingResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/city/CityResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/hotel/HotelListResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/hotel/HotelResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/lost/LostReportResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/route/RouteResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/safezone/SafeZoneResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/user/UserResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/models/response/weather/WeatherResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/AuthInterceptor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/RetrofitClient.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/TokenManager.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/api/BookingApi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/api/CityApi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/api/HotelApi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/api/LostApi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/api/RouteApi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/api/SafeZoneApi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/api/UserApi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/network/api/WeatherApi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/navigation/NavGraph.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/navigation/Screens.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/CityListScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/CreateBookingScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/HomeScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/HotelDetailScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/HotelListScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/LoginScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/LostReportScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/MyBookingsScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/ProfileScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/RegisterScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/RouteListScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/screens/SafeZoneScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/theme/Color.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/theme/Theme.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/theme/TopAppBarColors.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/theme/Typography.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/AdminViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/AuthViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/BookingViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/CityViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/HotelViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/LostViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/RouteViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/SafeZoneViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/UserViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/presentation/viewmodel/WeatherViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/AuthRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/BookingRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/CityRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/HotelRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/LostRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/RouteRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/SafeZoneRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/UserRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/repository/WeatherRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/utils/DateAdapter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/utils/DateFormatter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/utils/Result.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/utils/validators/DateValidator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/мобилка/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/мобилка/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/SoloGoViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/Models.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/data/SampleData.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/navigation/NavRoutes.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/navigation/SoloGoNavHost.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/BookingsScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/ChatScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/FaqScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/HomeScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/HotelDetailScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/HotelsScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/RoutesScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/SafeZonesScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/screens/TranslatorScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/theme/Color.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/theme/Shape.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/theme/SoloGoAppBar.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/theme/Theme.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/java/com/sologo/app/ui/theme/Type.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/app/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/мобилка/app/src/main/res/values/themes.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/мобилка/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/мобилка/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/мобилка/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/мобилка/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3DoaSQKwODnZkLBzqZ3sWH3hCLn" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/progger/Загрузки/диплом мобилка(1)/диплом мобилка/мобилка/мобилка"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1def1d6d-206b-4fd5-b0fb-982a960eef97" name="Changes" comment="" />
+      <created>1778950875469</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1778950875469</updated>
+    </task>
+    <servers />
+  </component>
+</project>
