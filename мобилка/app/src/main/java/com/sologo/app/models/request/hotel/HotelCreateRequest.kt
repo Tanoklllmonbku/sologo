@@ -34,5 +34,5 @@ data class HotelCreateRequest(
     val mainImage: String? = null,
 
     @SerializedName("room_images")
-    val roomImages: String? = null
+    val roomImages: List<String>? = null
 )

@@ -34,7 +34,7 @@ data class HotelUpdateRequest(
     val mainImage: String? = null,
 
     @SerializedName("room_images")
-    val roomImages: String? = null,
+    val roomImages: List<String>? = null,
 
     @SerializedName("status")
     val status: Int? = null
