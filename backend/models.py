@@ -81,7 +81,7 @@ class Hotel(Base):
     capacity = Column(Integer, default=10)  # ← максимальное количество человек в отеле
     manager_phones = Column(ARRAY(String(20)), nullable=True)  # ← номер менеджера
     main_image = Column(String, nullable=True)
-    room_images = Column(String, nullable=True)
+    room_images = Column(ARRAY(String), nullable=True)
     status = Column(Integer, default=1)
     created_at = Column(DateTime, default=datetime.utcnow)
     
@@ -97,7 +97,7 @@ class Route(Base):
     mood = Column(String(50), nullable=False)
     city_id = Column(Integer, ForeignKey("cities.city_id"), nullable=False)
     duration_hours = Column(Integer, default=2)
-    image = Column(String, nullable=True)
+    image = Column(ARRAY(String), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow) 
     
     city = relationship("City", back_populates="routes")
