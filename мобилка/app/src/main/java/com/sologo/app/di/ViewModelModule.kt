@@ -1,12 +1,13 @@
 package com.sologo.app.di
 
+import com.sologo.app.domain.repository.AuthRepository
 import com.sologo.app.presentation.viewmodel.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
     // Auth
-    viewModel { AuthViewModel(get(), get(), get()) }
+    viewModel { AuthViewModel(get(), get(), get(), get<AuthRepository>()) }
 
     // User
     viewModel { UserViewModel(get(), get(), get()) }

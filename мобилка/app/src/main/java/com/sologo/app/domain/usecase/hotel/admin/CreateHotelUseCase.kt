@@ -18,7 +18,7 @@ class CreateHotelUseCase(
         capacity: Int = 10,
         managerPhones: List<String>? = null,
         mainImage: String? = null,
-        roomImages: String? = null
+        roomImages: List<String>? = null
     ): Result<HotelDetail> {
         if (name.isBlank()) {
             return Result.Error("Название отеля не может быть пустым")

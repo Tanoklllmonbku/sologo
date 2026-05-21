@@ -6,7 +6,7 @@ data class UserUpdateRequest (
     @SerializedName("email")
     val nickname: String? = null,
 
-    @SerializedName("email")
+    @SerializedName("nickname")
     val email: String? = null,
 
     @SerializedName("phone_number")

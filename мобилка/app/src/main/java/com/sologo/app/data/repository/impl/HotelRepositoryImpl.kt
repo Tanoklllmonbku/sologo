@@ -50,7 +50,7 @@ class HotelRepositoryImpl(
         capacity: Int,
         managerPhones: List<String>?,
         mainImage: String?,
-        roomImages: String?
+        roomImages: List<String>?
     ): Result<HotelDetail> {
         return try {
             val request = HotelCreateRequest(

@@ -3,6 +3,7 @@ package com.sologo.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sologo.app.domain.repository.AuthRepository
 import com.sologo.app.domain.usecase.auth.LoginUseCase
 import com.sologo.app.domain.usecase.auth.LogoutUseCase
 import com.sologo.app.domain.usecase.auth.RegisterUseCase
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 class AuthViewModel(
     private val loginUseCase: LoginUseCase,
     private val registerUseCase: RegisterUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<Result<String>>(Result.Idle)
@@ -49,5 +51,8 @@ class AuthViewModel(
     fun clearStates() {
         _loginState.value = Result.Idle
         _registerState.value = Result.Idle
+    }
+    fun isLoggedIn(): Boolean {
+        return authRepository.isLoggedIn()
     }
 }
