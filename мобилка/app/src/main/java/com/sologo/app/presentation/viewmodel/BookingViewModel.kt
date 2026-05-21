@@ -1,4 +1,3 @@
-// presentation/viewmodel/BookingViewModel.kt
 package com.sologo.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -30,8 +29,8 @@ class BookingViewModel(
     private val _createBookingState = MutableStateFlow<Result<Booking>>(Result.Idle)
     val createBookingState: StateFlow<Result<Booking>> = _createBookingState.asStateFlow()
 
-    private val _cancelState = MutableStateFlow<Result<Booking>>(Result.Idle)
-    val cancelState: StateFlow<Result<Booking>> = _cancelState.asStateFlow()
+    private val _cancelState = MutableStateFlow<Result<Booking>>(Result.Idle)  // Изменено с Unit на Booking
+    val cancelState: StateFlow<Result<Booking>> = _cancelState.asStateFlow()   // Изменено с Unit на Booking
 
     fun loadMyBookings() {
         viewModelScope.launch {
@@ -47,7 +46,7 @@ class BookingViewModel(
             val result = createBookingUseCase(hotelId, guestsCount, checkIn, checkOut)
             _createBookingState.value = result
             if (result is Result.Success) {
-                loadMyBookings() // Обновляем список
+                loadMyBookings()
             }
         }
     }
@@ -58,8 +57,12 @@ class BookingViewModel(
             val result = cancelBookingUseCase(trackingNumber)
             _cancelState.value = result
             if (result is Result.Success) {
-                loadMyBookings() // Обновляем список
+                loadMyBookings()
             }
         }
+    }
+
+    fun clearCancelState() {
+        _cancelState.value = Result.Idle
     }
 }

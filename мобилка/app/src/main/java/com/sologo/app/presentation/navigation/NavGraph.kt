@@ -1,4 +1,3 @@
-// presentation/navigation/NavGraph.kt
 package com.sologo.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
@@ -72,7 +71,6 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 onSafeZones = { navController.navigate(Screen.SafeZones.route) },
                 onWeather = { /* TODO: реализовать погоду */ },
                 onProfile = {
-                    // Проверяем авторизацию
                     if (authViewModel.isLoggedIn()) {
                         navController.navigate(Screen.Profile.route)
                     } else {
@@ -129,6 +127,9 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 onBack = { navController.popBackStack() },
                 onNavigateToLogin = {
                     navController.navigate(Screen.Login.route)
+                },
+                onHotelClick = { hotelId ->  // ПЕРЕДАЕМ onHotelClick
+                    navController.navigate(Screen.HotelDetail.passId(hotelId))
                 }
             )
         }
@@ -155,7 +156,6 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 cityViewModel = cityViewModel,
                 onBack = { navController.popBackStack() },
                 onCityClick = { cityId ->
-                    // TODO: показать отели в городе
                     navController.navigate(Screen.HotelList.route)
                 }
             )

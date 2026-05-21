@@ -40,6 +40,7 @@ import com.sologo.app.presentation.theme.SoloOffWhite
 import com.sologo.app.presentation.theme.SoloWhite
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.HotelViewModel
+import com.sologo.app.utils.ImageUrlHelper
 import com.sologo.app.utils.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -160,7 +161,7 @@ private fun HotelCard(
             // Изображение (если есть)
             if (hotel.mainImage != null) {
                 AsyncImage(
-                    model = hotel.mainImage,
+                    model = ImageUrlHelper.toFullImageUrl(hotel.mainImage),
                     contentDescription = hotel.name,
                     modifier = Modifier
                         .fillMaxWidth()

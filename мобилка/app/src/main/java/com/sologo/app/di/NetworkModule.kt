@@ -1,4 +1,3 @@
-// di/NetworkModule.kt
 package com.sologo.app.di
 
 import com.google.gson.GsonBuilder
@@ -14,6 +13,28 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
+// Добавьте ErrorInterceptor.kt в папку network
+class ErrorInterceptor : okhttp3.Interceptor {
+    override fun intercept(chain: okhttp3.Interceptor.Chain): okhttp3.Response {
+        val request = chain.request()
+        val response = chain.proceed(request)
+
+        when (response.code) {
+            401 -> {
+                // Токен истек или неверные учетные данные
+                response.close()
+                throw retrofit2.HttpException(
+                    retrofit2.Response.error<Any>(
+                        response.body,
+                        response.newBuilder().build()
+                    )
+                )
+            }
+        }
+        return response
+    }
+}
+
 val networkModule = module {
 
     // TokenManager
@@ -26,6 +47,7 @@ val networkModule = module {
     single {
         OkHttpClient.Builder()
             .addInterceptor(get<AuthInterceptor>())
+            .addInterceptor(ErrorInterceptor())  // Добавлен перехватчик ошибок
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
