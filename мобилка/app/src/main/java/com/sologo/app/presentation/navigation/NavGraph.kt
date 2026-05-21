@@ -71,7 +71,14 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 onCities = { navController.navigate(Screen.CityList.route) },
                 onSafeZones = { navController.navigate(Screen.SafeZones.route) },
                 onWeather = { /* TODO: реализовать погоду */ },
-                onProfile = { navController.navigate(Screen.Profile.route) }
+                onProfile = {
+                    // Проверяем авторизацию
+                    if (authViewModel.isLoggedIn()) {
+                        navController.navigate(Screen.Profile.route)
+                    } else {
+                        navController.navigate(Screen.Login.route)
+                    }
+                }
             )
         }
 

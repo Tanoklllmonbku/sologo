@@ -18,7 +18,7 @@ interface HotelRepository {
         capacity: Int,
         managerPhones: List<String>?,
         mainImage: String?,
-        roomImages: String?
+        roomImages: List<String>?
     ): Result<HotelDetail>
     suspend fun updateHotel(
         hotelId: Int,

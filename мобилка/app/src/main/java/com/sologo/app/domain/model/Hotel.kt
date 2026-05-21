@@ -26,7 +26,7 @@ data class HotelDetail(
     val capacity: Int,
     val managerPhones: List<String>?,
     val mainImage: String?,
-    val roomImages: String?,
+    val roomImages: List<String>?,
     val status: Int,
     val createdAt: Date
 )

@@ -3,8 +3,6 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, List
 
-from sqlalchemy import ARRAY
-
 
 class HotelCreate(BaseModel):
     name: str
@@ -17,7 +15,7 @@ class HotelCreate(BaseModel):
     capacity: int = 10
     manager_phones: Optional[List[str]] = None
     main_image: Optional[str] = None
-    room_images: Optional[ARRAY[str]] = None
+    room_images: Optional[List[str]] = None
 
 
 class HotelUpdate(BaseModel):
@@ -31,7 +29,7 @@ class HotelUpdate(BaseModel):
     capacity: Optional[int] = None
     manager_phones: Optional[List[str]] = None
     main_image: Optional[str] = None
-    room_images: Optional[ARRAY[str]] = None
+    room_images: Optional[List[str]] = None
     status: Optional[int] = None
 
 
@@ -48,7 +46,7 @@ class HotelResponse(BaseModel):
     capacity: int = 10
     manager_phones: Optional[List[str]] = None
     main_image: Optional[str] = None
-    room_images: Optional[ARRAY[str]] = None
+    room_images: Optional[List[str]] = None
     status: int
     created_at: datetime
 
@@ -65,7 +63,7 @@ class HotelListResponse(BaseModel):
     avg_city_price: int
     rating: float
     main_image: Optional[str] = None
-    room_images: Optional[ARRAY[str]] = None
+    room_images: Optional[List[str]] = None
     capacity: int  # добавим для информации
 
     class Config:

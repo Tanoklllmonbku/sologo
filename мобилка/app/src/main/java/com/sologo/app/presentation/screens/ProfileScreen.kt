@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -40,7 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,26 +59,57 @@ fun ProfileScreen(
     onLogout: () -> Unit
 ) {
     val profileState by userViewModel.profileState.collectAsStateWithLifecycle()
+    val updateProfileState by userViewModel.updateProfileState.collectAsStateWithLifecycle()
+    val updatePasswordState by userViewModel.updatePasswordState.collectAsStateWithLifecycle()
 
     var isEditing by remember { mutableStateOf(false) }
     var nickname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
+    var showUpdateSuccess by remember { mutableStateOf(false) }
 
     var showPasswordDialog by remember { mutableStateOf(false) }
     var oldPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
+    var showPasswordSuccess by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         userViewModel.loadProfile()
     }
 
+    // Обновляем поля когда профиль загружен
     LaunchedEffect(profileState) {
         if (profileState is Result.Success) {
             val user = (profileState as Result.Success).data
             nickname = user.nickname
             email = user.email
             phoneNumber = user.phoneNumber ?: ""
+        }
+    }
+
+    // Обработка успешного обновления профиля
+    LaunchedEffect(updateProfileState) {
+        if (updateProfileState is Result.Success) {
+            showUpdateSuccess = true
+            isEditing = false
+            userViewModel.loadProfile() // Перезагружаем профиль
+            // Скрываем сообщение через 3 секунды
+            kotlinx.coroutines.delay(3000)
+            showUpdateSuccess = false
+            userViewModel.clearStates()
+        }
+    }
+
+    // Обработка успешной смены пароля
+    LaunchedEffect(updatePasswordState) {
+        if (updatePasswordState is Result.Success) {
+            showPasswordSuccess = true
+            showPasswordDialog = false
+            oldPassword = ""
+            newPassword = ""
+            kotlinx.coroutines.delay(3000)
+            showPasswordSuccess = false
+            userViewModel.clearStates()
         }
     }
 
@@ -102,7 +133,8 @@ fun ProfileScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding),
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(color = SoloGreen)
                 }
@@ -117,6 +149,37 @@ fun ProfileScreen(
                         .padding(padding)
                         .padding(16.dp)
                 ) {
+                    // Сообщение об успехе
+                    if (showUpdateSuccess) {
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = SoloGreen),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Профиль успешно обновлён!",
+                                color = Color.White,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
+                    if (showPasswordSuccess) {
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = SoloGreen),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Пароль успешно изменён!",
+                                color = Color.White,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
                     if (!isEditing) {
                         // Просмотр профиля
                         Card(
@@ -194,6 +257,16 @@ fun ProfileScreen(
 
                                 Spacer(modifier = Modifier.height(16.dp))
 
+                                // Ошибка при обновлении
+                                if (updateProfileState is Result.Error) {
+                                    Text(
+                                        text = (updateProfileState as Result.Error).message,
+                                        color = MaterialTheme.colorScheme.error,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(bottom = 8.dp)
+                                    )
+                                }
+
                                 OutlinedTextField(
                                     value = nickname,
                                     onValueChange = { nickname = it },
@@ -223,20 +296,31 @@ fun ProfileScreen(
 
                                 Button(
                                     onClick = {
-                                        userViewModel.updateProfile(nickname, email, phoneNumber.takeIf { it.isNotBlank() })
-                                        isEditing = false
+                                        userViewModel.updateProfile(
+                                            nickname.takeIf { it != user.nickname },
+                                            email.takeIf { it != user.email },
+                                            phoneNumber.takeIf { it.isNotBlank() && it != user.phoneNumber }
+                                        )
                                     },
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = ButtonDefaults.buttonColors(containerColor = SoloGreen),
-                                    shape = RoundedCornerShape(12.dp)
+                                    shape = RoundedCornerShape(12.dp),
+                                    enabled = updateProfileState !is Result.Loading
                                 ) {
-                                    Text("Сохранить", color = Color.White)
+                                    if (updateProfileState is Result.Loading) {
+                                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+                                    } else {
+                                        Text("Сохранить", color = Color.White)
+                                    }
                                 }
 
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 Button(
-                                    onClick = { isEditing = false },
+                                    onClick = {
+                                        isEditing = false
+                                        userViewModel.clearStates()
+                                    },
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                                     shape = RoundedCornerShape(12.dp)
@@ -254,10 +338,11 @@ fun ProfileScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding),
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Ошибка загрузки профиля",
+                        text = (profileState as Result.Error).message,
                         color = MaterialTheme.colorScheme.error
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -276,22 +361,35 @@ fun ProfileScreen(
 
     if (showPasswordDialog) {
         androidx.compose.material3.AlertDialog(
-            onDismissRequest = { showPasswordDialog = false },
+            onDismissRequest = {
+                showPasswordDialog = false
+                userViewModel.clearStates()
+            },
             title = { Text("Смена пароля") },
             text = {
                 Column {
+                    if (updatePasswordState is Result.Error) {
+                        Text(
+                            text = (updatePasswordState as Result.Error).message,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                     OutlinedTextField(
                         value = oldPassword,
                         onValueChange = { oldPassword = it },
                         label = { Text("Старый пароль") },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = updatePasswordState !is Result.Loading
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = newPassword,
                         onValueChange = { newPassword = it },
                         label = { Text("Новый пароль") },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = updatePasswordState !is Result.Loading
                     )
                 }
             },
@@ -299,17 +397,22 @@ fun ProfileScreen(
                 Button(
                     onClick = {
                         userViewModel.updatePassword(oldPassword, newPassword)
-                        showPasswordDialog = false
-                        oldPassword = ""
-                        newPassword = ""
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = SoloGreen)
+                    colors = ButtonDefaults.buttonColors(containerColor = SoloGreen),
+                    enabled = updatePasswordState !is Result.Loading && oldPassword.isNotBlank() && newPassword.isNotBlank()
                 ) {
-                    Text("Сменить")
+                    if (updatePasswordState is Result.Loading) {
+                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+                    } else {
+                        Text("Сменить")
+                    }
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showPasswordDialog = false }) {
+                TextButton(onClick = {
+                    showPasswordDialog = false
+                    userViewModel.clearStates()
+                }) {
                     Text("Отмена")
                 }
             }
