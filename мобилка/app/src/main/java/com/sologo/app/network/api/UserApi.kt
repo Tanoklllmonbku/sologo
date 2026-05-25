@@ -5,7 +5,9 @@ import com.sologo.app.models.request.auth.RegisterRequest
 import com.sologo.app.models.request.user.UserUpdatePasswordRequest
 import com.sologo.app.models.request.user.UserUpdateRequest
 import com.sologo.app.models.response.auth.AuthResponse
+import com.sologo.app.models.response.user.PasswordUpdateResponse
 import com.sologo.app.models.response.user.UserResponse
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -27,8 +29,9 @@ interface UserApi {
     suspend fun updateMe(@Body request: UserUpdateRequest): UserResponse
 
     @PATCH("api/v1/users/me/password")
-    suspend fun updatePassword(@Body request: UserUpdatePasswordRequest): UserResponse
-
+    suspend fun updatePassword(
+        @Body request: UserUpdatePasswordRequest
+    ): Response<PasswordUpdateResponse>
     // ========== ADMIN ==========
     @GET("api/v1/users/")
     suspend fun getAllUsers(): List<UserResponse>

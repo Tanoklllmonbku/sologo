@@ -97,7 +97,7 @@ class Route(Base):
     mood = Column(String(50), nullable=False)
     city_id = Column(Integer, ForeignKey("cities.city_id"), nullable=False)
     duration_hours = Column(Integer, default=2)
-    image = Column(ARRAY(String), nullable=True)
+    image = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow) 
     
     city = relationship("City", back_populates="routes")

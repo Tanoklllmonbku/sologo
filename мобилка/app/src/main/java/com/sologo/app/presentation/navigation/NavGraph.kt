@@ -1,16 +1,19 @@
-// presentation/navigation/NavGraph.kt
 package com.sologo.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.getKoin
 import com.sologo.app.presentation.screens.*
 import com.sologo.app.presentation.viewmodel.*
+import com.sologo.app.utils.ThemeManager
 
 @Composable
 fun SoloGoNavHost(modifier: Modifier = Modifier) {
@@ -25,89 +28,136 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
     val routeViewModel: RouteViewModel = koinViewModel()
     val lostViewModel: LostViewModel = koinViewModel()
     val safeZoneViewModel: SafeZoneViewModel = koinViewModel()
+    val weatherViewModel: WeatherViewModel = koinViewModel()
+    val themeManager: ThemeManager = getKoin().get()
+
+    val isLoggedIn by authViewModel.isLoggedIn.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = if (isLoggedIn) "main" else "login",
         modifier = modifier
     ) {
-        // Auth
-        composable(Screen.Login.route) {
+        // Экран логина
+        composable("login") {
             LoginScreen(
                 authViewModel = authViewModel,
                 onLoginSuccess = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
+                    navController.navigate("main") {
+                        popUpTo("login") { inclusive = true }
                     }
                 },
                 onNavigateToRegister = {
-                    navController.navigate(Screen.Register.route)
+                    navController.navigate("register")
                 }
             )
         }
 
-        composable(Screen.Register.route) {
+        // Экран регистрации
+        composable("register") {
             RegisterScreen(
                 authViewModel = authViewModel,
                 onRegisterSuccess = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Register.route) { inclusive = true }
+                    navController.navigate("login") {
+                        popUpTo("register") { inclusive = true }
                     }
                 },
                 onNavigateToLogin = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Register.route) { inclusive = true }
+                    navController.navigate("login") {
+                        popUpTo("register") { inclusive = true }
                     }
                 }
             )
         }
 
-        // Main
-        composable(Screen.Home.route) {
-            HomeScreen(
-                onBookings = { navController.navigate(Screen.MyBookings.route) },
-                onRoutes = { navController.navigate(Screen.RouteList.route) },
-                onHotels = { navController.navigate(Screen.HotelList.route) },
-                onCities = { navController.navigate(Screen.CityList.route) },
-                onSafeZones = { navController.navigate(Screen.SafeZones.route) },
-                onWeather = { /* TODO: реализовать погоду */ },
-                onProfile = {
-                    // Проверяем авторизацию
-                    if (authViewModel.isLoggedIn()) {
-                        navController.navigate(Screen.Profile.route)
-                    } else {
-                        navController.navigate(Screen.Login.route)
-                    }
-                }
-            )
-        }
-
-        composable(Screen.Profile.route) {
-            ProfileScreen(
+        // Главный экран с нижней навигацией
+        composable("main") {
+            MainScreen(
+                authViewModel = authViewModel,
                 userViewModel = userViewModel,
-                onBack = { navController.popBackStack() },
+                hotelViewModel = hotelViewModel,
+                bookingViewModel = bookingViewModel,
+                cityViewModel = cityViewModel,
+                routeViewModel = routeViewModel,
+                lostViewModel = lostViewModel,
+                safeZoneViewModel = safeZoneViewModel,
+                weatherViewModel = weatherViewModel,
+                themeManager = themeManager,
                 onLogout = {
                     authViewModel.logout()
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true }
+                    navController.navigate("login") {
+                        popUpTo("main") { inclusive = true }
                     }
                 }
             )
         }
 
-        // Hotels
-        composable(Screen.HotelList.route) {
-            HotelListScreen(
-                hotelViewModel = hotelViewModel,
+        // Остальные экраны...
+        composable("my_bookings") {
+            MyBookingsScreen(
+                bookingViewModel = bookingViewModel,
                 onBack = { navController.popBackStack() },
-                onHotelClick = { hotelId ->
-                    navController.navigate(Screen.HotelDetail.passId(hotelId))
+                onNavigateToLogin = {
+                    navController.navigate("login") {
+                        popUpTo("main") { inclusive = true }
+                    }
+                },
+                onHotelClick = { hotelId: Int ->
+                    navController.navigate("hotel_detail/$hotelId")
                 }
             )
         }
 
+        composable("routes") {
+            RouteListScreen(
+                routeViewModel = routeViewModel,
+                cityViewModel = cityViewModel,
+                onBack = { navController.popBackStack() },
+                onRouteClick = { routeId: Int ->
+                    navController.navigate("route_detail/$routeId")
+                }
+            )
+        }
+
+        composable("hotels") {
+            HotelListScreen(
+                hotelViewModel = hotelViewModel,
+                cityViewModel = cityViewModel,
+                onBack = { navController.popBackStack() },
+                onHotelClick = { hotelId: Int ->
+                    navController.navigate("hotel_detail/$hotelId")
+                }
+            )
+        }
+
+        composable("cities") {
+            CityListScreen(
+                cityViewModel = cityViewModel,
+                onBack = { navController.popBackStack() },
+                onCityClick = { cityId: Int, cityName: String ->
+                    navController.navigate("city_detail/$cityId/${cityName}")
+                }
+            )
+        }
+
+        composable("safe_zones") {
+            SafeZoneScreen(
+                safeZoneViewModel = safeZoneViewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("lost_report") {
+            LostReportScreen(
+                lostViewModel = lostViewModel,
+                cityViewModel = cityViewModel,  // ← ДОБАВЛЯЕМ cityViewModel
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Экран детали отеля
         composable(
-            route = Screen.HotelDetail.route,
+            route = "hotel_detail/{hotelId}",
             arguments = listOf(navArgument("hotelId") { type = NavType.IntType })
         ) { backStackEntry ->
             val hotelId = backStackEntry.arguments?.getInt("hotelId") ?: 0
@@ -116,25 +166,15 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 hotelViewModel = hotelViewModel,
                 bookingViewModel = bookingViewModel,
                 onBack = { navController.popBackStack() },
-                onCreateBooking = { hotelId ->
-                    navController.navigate(Screen.CreateBooking.passId(hotelId))
+                onCreateBooking = { hotelIdInner: Int ->
+                    navController.navigate("create_booking/$hotelIdInner")
                 }
             )
         }
 
-        // Bookings
-        composable(Screen.MyBookings.route) {
-            MyBookingsScreen(
-                bookingViewModel = bookingViewModel,
-                onBack = { navController.popBackStack() },
-                onNavigateToLogin = {
-                    navController.navigate(Screen.Login.route)
-                }
-            )
-        }
-
+        // Экран создания бронирования
         composable(
-            route = Screen.CreateBooking.route,
+            route = "create_booking/{hotelId}",
             arguments = listOf(navArgument("hotelId") { type = NavType.IntType })
         ) { backStackEntry ->
             val hotelId = backStackEntry.arguments?.getInt("hotelId") ?: 0
@@ -144,43 +184,46 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 onBack = { navController.popBackStack() },
                 onSuccess = {
                     navController.popBackStack()
-                    navController.navigate(Screen.MyBookings.route)
+                    navController.navigate("my_bookings")
                 }
             )
         }
 
-        // Cities
-        composable(Screen.CityList.route) {
-            CityListScreen(
-                cityViewModel = cityViewModel,
+        // Экран детали города
+        composable(
+            route = "city_detail/{cityId}/{cityName}",
+            arguments = listOf(
+                navArgument("cityId") { type = NavType.IntType },
+                navArgument("cityName") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val cityId = backStackEntry.arguments?.getInt("cityId") ?: 0
+            val cityName = backStackEntry.arguments?.getString("cityName") ?: ""
+            val cityDetailViewModel: CityDetailViewModel = koinViewModel()
+
+            CityDetailScreen(
+                cityId = cityId,
+                cityName = cityName,
+                viewModel = cityDetailViewModel,
                 onBack = { navController.popBackStack() },
-                onCityClick = { cityId ->
-                    // TODO: показать отели в городе
-                    navController.navigate(Screen.HotelList.route)
+                onHotelClick = { hotelId: Int ->
+                    navController.navigate("hotel_detail/$hotelId")
+                },
+                onRouteClick = { routeId: Int ->
+                    navController.navigate("route_detail/$routeId")
                 }
             )
         }
 
-        // Routes
-        composable(Screen.RouteList.route) {
-            RouteListScreen(
+        // Экран детали маршрута
+        composable(
+            route = "route_detail/{routeId}",
+            arguments = listOf(navArgument("routeId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val routeId = backStackEntry.arguments?.getInt("routeId") ?: 0
+            RouteDetailScreen(
+                routeId = routeId,
                 routeViewModel = routeViewModel,
-                onBack = { navController.popBackStack() }
-            )
-        }
-
-        // Lost Report
-        composable(Screen.LostReport.route) {
-            LostReportScreen(
-                lostViewModel = lostViewModel,
-                onBack = { navController.popBackStack() }
-            )
-        }
-
-        // Safe Zones
-        composable(Screen.SafeZones.route) {
-            SafeZoneScreen(
-                safeZoneViewModel = safeZoneViewModel,
                 onBack = { navController.popBackStack() }
             )
         }

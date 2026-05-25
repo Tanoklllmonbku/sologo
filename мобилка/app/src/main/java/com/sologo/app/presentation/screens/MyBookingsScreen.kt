@@ -1,4 +1,3 @@
-// presentation/screens/MyBookingsScreen.kt
 package com.sologo.app.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
@@ -38,8 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sologo.app.domain.model.Booking
 import com.sologo.app.presentation.theme.SoloGreen
-import com.sologo.app.presentation.theme.SoloOffWhite
-import com.sologo.app.presentation.theme.SoloWhite
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.BookingViewModel
 import com.sologo.app.utils.Result
@@ -51,57 +48,33 @@ import java.util.Locale
 fun MyBookingsScreen(
     bookingViewModel: BookingViewModel,
     onBack: () -> Unit,
-    onNavigateToLogin: () -> Unit = {}
+    onNavigateToLogin: () -> Unit = {},
+    onHotelClick: (Int) -> Unit = {}
 ) {
     val bookingsState by bookingViewModel.bookingsState.collectAsStateWithLifecycle()
     val isLoggedIn = bookingViewModel.isLoggedIn
     var cancelingId by remember { mutableStateOf<String?>(null) }
-
     val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-    LaunchedEffect(Unit) {
-        if (isLoggedIn) {
-            bookingViewModel.loadMyBookings()
-        }
-    }
+    LaunchedEffect(Unit) { if (isLoggedIn) bookingViewModel.loadMyBookings() }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Мои бронирования") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
-                    }
+                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null) }
                 },
                 colors = soloGoTopAppBarColors()
             )
         },
-        containerColor = SoloOffWhite
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-
-        // Если не авторизован - показываем предложение войти
         if (!isLoggedIn) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text(
-                        text = "Для просмотра бронирований нужно войти в аккаунт",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Button(
-                        onClick = onNavigateToLogin,
-                        colors = ButtonDefaults.buttonColors(containerColor = SoloGreen),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
+            Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text("Для просмотра бронирований нужно войти в аккаунт", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Button(onClick = onNavigateToLogin, colors = ButtonDefaults.buttonColors(containerColor = SoloGreen), shape = RoundedCornerShape(12.dp)) {
                         Text("Войти", color = Color.White)
                     }
                 }
@@ -110,86 +83,35 @@ fun MyBookingsScreen(
         }
 
         when (bookingsState) {
-            is Result.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = SoloGreen)
-                }
-            }
-
+            is Result.Loading -> Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = SoloGreen) }
             is Result.Success -> {
                 val bookings = (bookingsState as Result.Success).data
-
                 if (bookings.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "У вас пока нет бронирований",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = "Перейдите в раздел Отели и забронируйте номер",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
+                            Text("У вас пока нет бронирований", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("Перейдите в раздел Отели и забронируйте номер", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 8.dp))
                         }
                     }
                 } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding)
-                            .padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
+                    LazyColumn(modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         items(bookings, key = { it.trackingNumber }) { booking ->
                             BookingCard(
-                                booking = booking,
-                                dateFormat = dateFormat,
+                                booking = booking, dateFormat = dateFormat,
                                 isCanceling = cancelingId == booking.trackingNumber,
-                                onCancel = {
-                                    cancelingId = booking.trackingNumber
-                                    bookingViewModel.cancelBooking(booking.trackingNumber)
-                                }
+                                onCancel = { cancelingId = booking.trackingNumber; bookingViewModel.cancelBooking(booking.trackingNumber) },
+                                onClick = { onHotelClick(booking.hotelId) }
                             )
                         }
                     }
                 }
             }
-
-            is Result.Error -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = (bookingsState as Result.Error).message,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                        Button(
-                            onClick = { bookingViewModel.loadMyBookings() },
-                            modifier = Modifier.padding(top = 16.dp)
-                        ) {
-                            Text("Повторить")
-                        }
-                    }
+            is Result.Error -> Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text((bookingsState as Result.Error).message, color = MaterialTheme.colorScheme.error)
+                    Button(onClick = { bookingViewModel.loadMyBookings() }, modifier = Modifier.padding(top = 16.dp)) { Text("Повторить") }
                 }
             }
-
             else -> {}
         }
     }
@@ -197,103 +119,47 @@ fun MyBookingsScreen(
 
 @Composable
 private fun BookingCard(
-    booking: Booking,
-    dateFormat: SimpleDateFormat,
-    isCanceling: Boolean,
-    onCancel: () -> Unit
+    booking: Booking, dateFormat: SimpleDateFormat, isCanceling: Boolean,
+    onCancel: () -> Unit, onClick: () -> Unit
 ) {
     Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SoloWhite),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.fillMaxWidth()
+        onClick = onClick, shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = booking.hotelName,
-                style = MaterialTheme.typography.titleLarge,
-                color = SoloGreen
-            )
-
-            Text(
-                text = booking.hotelCity,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            Text(
-                text = "${dateFormat.format(booking.checkIn)} - ${dateFormat.format(booking.checkOut)}",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            Text(
-                text = "Гостей: ${booking.guestsCount} · ${booking.days} ночей",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Text(
-                text = "Итого: ${booking.totalPrice} ₽",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            Text(
-                text = "Статус: ${getStatusText(booking.status.name)}",
-                style = MaterialTheme.typography.labelMedium,
-                color = getStatusColor(booking.status.name),
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
+            Text(booking.hotelName, style = MaterialTheme.typography.titleLarge, color = SoloGreen)
+            Text(booking.hotelCity, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
+            Text("${dateFormat.format(booking.checkIn)} - ${dateFormat.format(booking.checkOut)}", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 8.dp))
+            Text("Гостей: ${booking.guestsCount} · ${booking.days} ночей", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Итого: ${booking.totalPrice} ₽", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            Text("Статус: ${getStatusText(booking.status.name)}", style = MaterialTheme.typography.labelMedium, color = getStatusColor(booking.status.name), modifier = Modifier.padding(top = 4.dp))
             if (booking.status.name == "PENDING" && !isCanceling) {
-                Button(
-                    onClick = onCancel,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error
-                    ),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Icon(Icons.Default.Cancel, contentDescription = null)
-                    Text("Отменить бронирование")
+                Button(onClick = onCancel, modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error), shape = RoundedCornerShape(10.dp)) {
+                    Icon(Icons.Default.Cancel, null); Text("Отменить бронирование")
                 }
             }
-
-            if (isCanceling) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = SoloGreen)
-                }
+            if (isCanceling) Box(modifier = Modifier.fillMaxWidth().padding(top = 12.dp), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = SoloGreen)
             }
         }
     }
 }
 
-private fun getStatusText(status: String): String {
-    return when (status) {
-        "PENDING" -> "Ожидает подтверждения"
-        "CONFIRMED" -> "Подтверждено"
-        "CANCELLED" -> "Отменено"
-        "COMPLETED" -> "Завершено"
-        else -> status
-    }
+private fun getStatusText(status: String): String = when (status) {
+    "PENDING" -> "Ожидает подтверждения"
+    "CONFIRMED" -> "Подтверждено"
+    "CANCELLED" -> "Отменено"
+    "COMPLETED" -> "Завершено"
+    else -> status
 }
 
 @Composable
-private fun getStatusColor(status: String): Color {
-    return when (status) {
-        "PENDING" -> MaterialTheme.colorScheme.primary
-        "CONFIRMED" -> SoloGreen
-        "CANCELLED" -> MaterialTheme.colorScheme.error
-        "COMPLETED" -> MaterialTheme.colorScheme.tertiary
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
-    }
+private fun getStatusColor(status: String): Color = when (status) {
+    "PENDING" -> MaterialTheme.colorScheme.primary
+    "CONFIRMED" -> SoloGreen
+    "CANCELLED" -> MaterialTheme.colorScheme.error
+    "COMPLETED" -> MaterialTheme.colorScheme.tertiary
+    else -> MaterialTheme.colorScheme.onSurfaceVariant
 }

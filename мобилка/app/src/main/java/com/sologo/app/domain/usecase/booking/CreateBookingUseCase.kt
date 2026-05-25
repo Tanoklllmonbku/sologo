@@ -29,7 +29,8 @@ class CreateBookingUseCase(
         if (!DateValidator.isValid(checkOut)) {
             return Result.Error("Неверный формат даты выезда")
         }
-        if (!DateValidator.isFuture(checkIn)) {
+        // Используем исправленный метод - разрешает сегодня
+        if (!DateValidator.isFutureOrToday(checkIn)) {
             return Result.Error("Дата заезда не может быть в прошлом")
         }
         if (!DateValidator.isAfter(checkOut, checkIn)) {

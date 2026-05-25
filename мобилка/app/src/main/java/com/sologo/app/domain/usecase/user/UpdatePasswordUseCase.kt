@@ -1,13 +1,12 @@
 package com.sologo.app.domain.usecase.user
 
-import com.sologo.app.domain.model.User
 import com.sologo.app.domain.repository.UserRepository
 import com.sologo.app.utils.Result
 
 class UpdatePasswordUseCase(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(oldPassword: String, newPassword: String): Result<User> {
+    suspend operator fun invoke(oldPassword: String, newPassword: String): Result<Unit> {  // ← изменено
         if (oldPassword.isBlank()) {
             return Result.Error("Старый пароль не может быть пустым")
         }

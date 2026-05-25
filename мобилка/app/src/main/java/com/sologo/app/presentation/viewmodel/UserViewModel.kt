@@ -1,9 +1,9 @@
-// presentation/viewmodel/UserViewModel.kt
 package com.sologo.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sologo.app.domain.model.User
+import com.sologo.app.domain.repository.AuthRepository
 import com.sologo.app.domain.usecase.user.GetProfileUseCase
 import com.sologo.app.domain.usecase.user.UpdatePasswordUseCase
 import com.sologo.app.domain.usecase.user.UpdateProfileUseCase
@@ -16,8 +16,12 @@ import kotlinx.coroutines.launch
 class UserViewModel(
     private val getProfileUseCase: GetProfileUseCase,
     private val updateProfileUseCase: UpdateProfileUseCase,
-    private val updatePasswordUseCase: UpdatePasswordUseCase
+    private val updatePasswordUseCase: UpdatePasswordUseCase,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
+
+    private val _isLoggedIn = MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
     private val _profileState = MutableStateFlow<Result<User>>(Result.Idle)
     val profileState: StateFlow<Result<User>> = _profileState.asStateFlow()
@@ -25,14 +29,30 @@ class UserViewModel(
     private val _updateProfileState = MutableStateFlow<Result<User>>(Result.Idle)
     val updateProfileState: StateFlow<Result<User>> = _updateProfileState.asStateFlow()
 
-    private val _updatePasswordState = MutableStateFlow<Result<User>>(Result.Idle)
-    val updatePasswordState: StateFlow<Result<User>> = _updatePasswordState.asStateFlow()
+    private val _updatePasswordState = MutableStateFlow<Result<Unit>>(Result.Idle)  // ← Unit
+    val updatePasswordState: StateFlow<Result<Unit>> = _updatePasswordState.asStateFlow()
+
+    init {
+        checkAuthStatus()
+    }
+
+    fun checkAuthStatus() {
+        viewModelScope.launch {
+            _isLoggedIn.value = authRepository.isLoggedIn()
+            if (_isLoggedIn.value) {
+                loadProfile()
+            }
+        }
+    }
 
     fun loadProfile() {
         viewModelScope.launch {
             _profileState.value = Result.Loading
             val result = getProfileUseCase()
             _profileState.value = result
+            if (result is Result.Error) {
+                _isLoggedIn.value = false
+            }
         }
     }
 
@@ -42,7 +62,7 @@ class UserViewModel(
             val result = updateProfileUseCase(nickname, email, phoneNumber)
             _updateProfileState.value = result
             if (result is Result.Success) {
-                loadProfile() // Обновляем профиль
+                loadProfile()
             }
         }
     }
@@ -52,6 +72,9 @@ class UserViewModel(
             _updatePasswordState.value = Result.Loading
             val result = updatePasswordUseCase(oldPassword, newPassword)
             _updatePasswordState.value = result
+            if (result is Result.Success) {
+                loadProfile()  // ← перезагружаем профиль
+            }
         }
     }
 

@@ -1,4 +1,3 @@
-// presentation/viewmodel/AuthViewModel.kt
 package com.sologo.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -26,11 +25,17 @@ class AuthViewModel(
     private val _registerState = MutableStateFlow<Result<com.sologo.app.domain.model.User>>(Result.Idle)
     val registerState: StateFlow<Result<com.sologo.app.domain.model.User>> = _registerState.asStateFlow()
 
+    private val _isLoggedIn = MutableStateFlow(authRepository.isLoggedIn())
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
+
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _loginState.value = Result.Loading
             val result = loginUseCase(email, password)
             _loginState.value = result
+            if (result is Result.Success) {
+                _isLoggedIn.value = authRepository.isLoggedIn()  // ← ОБНОВЛЯЕМ
+            }
         }
     }
 
@@ -45,6 +50,7 @@ class AuthViewModel(
     fun logout() {
         viewModelScope.launch {
             logoutUseCase()
+            _isLoggedIn.value = false  // ← ОБНОВЛЯЕМ ПОСЛЕ ВЫХОДА
         }
     }
 
@@ -52,7 +58,8 @@ class AuthViewModel(
         _loginState.value = Result.Idle
         _registerState.value = Result.Idle
     }
-    fun isLoggedIn(): Boolean {
-        return authRepository.isLoggedIn()
+
+    fun checkAuthStatus() {
+        _isLoggedIn.value = authRepository.isLoggedIn()
     }
 }

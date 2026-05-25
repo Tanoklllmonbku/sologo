@@ -1,4 +1,3 @@
-// utils/validators/DateValidator.kt
 package com.sologo.app.utils.validators
 
 import java.text.SimpleDateFormat
@@ -24,7 +23,16 @@ object DateValidator {
     }
 
     /**
-     * Проверяет, что дата в будущем
+     * Проверяет, что дата сегодня или в будущем (исправлено)
+     */
+    fun isFutureOrToday(dateStr: String): Boolean {
+        val date = parseDate(dateStr) ?: return false
+        val today = Date()
+        return date.after(today) || isSameDay(date, today)
+    }
+
+    /**
+     * Проверяет, что дата в будущем (строго, без сегодня)
      */
     fun isFuture(dateStr: String): Boolean {
         val date = parseDate(dateStr) ?: return false
@@ -42,12 +50,12 @@ object DateValidator {
     }
 
     /**
-     * Проверяет, что дата после другой даты
+     * Проверяет, что дата после другой даты (или равна? зависит от needStrict)
      */
-    fun isAfter(dateStr: String, afterDateStr: String): Boolean {
+    fun isAfter(dateStr: String, afterDateStr: String, needStrict: Boolean = true): Boolean {
         val date = parseDate(dateStr) ?: return false
         val afterDate = parseDate(afterDateStr) ?: return false
-        return date.after(afterDate)
+        return if (needStrict) date.after(afterDate) else !date.before(afterDate)
     }
 
     /**

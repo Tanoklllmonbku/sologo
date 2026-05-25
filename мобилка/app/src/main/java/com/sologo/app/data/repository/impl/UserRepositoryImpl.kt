@@ -43,11 +43,17 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun updatePassword(oldPassword: String, newPassword: String): Result<User> {
+    override suspend fun updatePassword(oldPassword: String, newPassword: String): Result<Unit> {
         return try {
             val request = UserUpdatePasswordRequest(oldPassword, newPassword)
             val response = userApi.updatePassword(request)
-            Result.Success(UserMapper.toDomain(response))
+
+            if (response.isSuccessful) {
+                Result.Success(Unit)  // ← просто успех
+            } else {
+                val errorMsg = response.errorBody()?.string() ?: "Ошибка смены пароля"
+                Result.Error(errorMsg)
+            }
         } catch (e: IOException) {
             Result.Error("Ошибка сети: ${e.message}")
         } catch (e: Exception) {
