@@ -1,4 +1,3 @@
-// presentation/screens/CreateBookingScreen.kt
 package com.sologo.app.presentation.screens
 
 import androidx.compose.foundation.clickable
@@ -49,8 +48,10 @@ import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.BookingViewModel
 import com.sologo.app.utils.Result
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 private val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
@@ -239,16 +240,28 @@ fun CreateBookingScreen(
         }
     }
 
-    // DatePicker диалоги
+    // DatePicker диалог для даты заезда (с ограничением от сегодня)
     if (showCheckInPicker) {
-        val checkInState = androidx.compose.material3.rememberDatePickerState()
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val todayInMillis = calendar.timeInMillis
+
+        val checkInState = androidx.compose.material3.rememberDatePickerState(
+            initialSelectedDateMillis = todayInMillis
+        )
+
         DatePickerDialog(
             onDismissRequest = { showCheckInPicker = false },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        checkInState.selectedDateMillis?.let {
-                            checkInDate = formatDateFromMillis(it)
+                        checkInState.selectedDateMillis?.let { millis ->
+                            if (millis >= todayInMillis) {
+                                checkInDate = formatDateFromMillis(millis)
+                            }
                         }
                         showCheckInPicker = false
                     }
@@ -262,15 +275,35 @@ fun CreateBookingScreen(
         }
     }
 
+    // DatePicker диалог для даты выезда (не может быть раньше даты заезда)
     if (showCheckOutPicker) {
-        val checkOutState = androidx.compose.material3.rememberDatePickerState()
+        val checkInMillis = if (checkInDate.isNotBlank()) {
+            LocalDate.parse(checkInDate, dateFormat)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()
+        } else {
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            calendar.timeInMillis
+        }
+
+        val checkOutState = androidx.compose.material3.rememberDatePickerState(
+            initialSelectedDateMillis = checkInMillis + 86400000
+        )
+
         DatePickerDialog(
             onDismissRequest = { showCheckOutPicker = false },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        checkOutState.selectedDateMillis?.let {
-                            checkOutDate = formatDateFromMillis(it)
+                        checkOutState.selectedDateMillis?.let { millis ->
+                            if (millis > checkInMillis) {
+                                checkOutDate = formatDateFromMillis(millis)
+                            }
                         }
                         showCheckOutPicker = false
                     }

@@ -1,4 +1,3 @@
-// presentation/viewmodel/AuthViewModel.kt
 package com.sologo.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -30,7 +29,20 @@ class AuthViewModel(
         viewModelScope.launch {
             _loginState.value = Result.Loading
             val result = loginUseCase(email, password)
-            _loginState.value = result
+            // Обработка 401 ошибки
+            _loginState.value = when (result) {
+                is Result.Error -> {
+                    val message = if (result.message.contains("401") ||
+                        result.message.contains("Unauthorized") ||
+                        result.message.contains("unauthorized")) {
+                        "Неверный email или пароль"
+                    } else {
+                        result.message
+                    }
+                    Result.Error(message)
+                }
+                else -> result
+            }
         }
     }
 
@@ -52,6 +64,7 @@ class AuthViewModel(
         _loginState.value = Result.Idle
         _registerState.value = Result.Idle
     }
+
     fun isLoggedIn(): Boolean {
         return authRepository.isLoggedIn()
     }

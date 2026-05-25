@@ -40,6 +40,7 @@ import com.sologo.app.presentation.theme.SoloWhite
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.BookingViewModel
 import com.sologo.app.presentation.viewmodel.HotelViewModel
+import com.sologo.app.utils.ImageUrlHelper
 import com.sologo.app.utils.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,7 +96,7 @@ fun HotelDetailScreen(
                 ) {
                     // Основное фото
                     AsyncImage(
-                        model = hotel.mainImage ?: hotel.roomImages,
+                        model = ImageUrlHelper.toFullImageUrl(hotel.mainImage) ?: ImageUrlHelper.toFullImageUrl(hotel.roomImages?.firstOrNull()),
                         contentDescription = hotel.name,
                         modifier = Modifier
                             .fillMaxWidth()

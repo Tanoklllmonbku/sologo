@@ -1,4 +1,3 @@
-// presentation/screens/MyBookingsScreen.kt
 package com.sologo.app.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
@@ -51,9 +50,11 @@ import java.util.Locale
 fun MyBookingsScreen(
     bookingViewModel: BookingViewModel,
     onBack: () -> Unit,
-    onNavigateToLogin: () -> Unit = {}
+    onNavigateToLogin: () -> Unit = {},
+    onHotelClick: (Int) -> Unit = {}
 ) {
     val bookingsState by bookingViewModel.bookingsState.collectAsStateWithLifecycle()
+    val cancelState by bookingViewModel.cancelState.collectAsStateWithLifecycle()
     val isLoggedIn = bookingViewModel.isLoggedIn
     var cancelingId by remember { mutableStateOf<String?>(null) }
 
@@ -62,6 +63,21 @@ fun MyBookingsScreen(
     LaunchedEffect(Unit) {
         if (isLoggedIn) {
             bookingViewModel.loadMyBookings()
+        }
+    }
+
+    // Сбрасываем cancelingId при успешной или неудачной отмене
+    LaunchedEffect(cancelState) {
+        when (cancelState) {
+            is Result.Success -> {
+                cancelingId = null
+                bookingViewModel.clearCancelState()
+            }
+            is Result.Error -> {
+                cancelingId = null
+                bookingViewModel.clearCancelState()
+            }
+            else -> {}
         }
     }
 
@@ -161,7 +177,8 @@ fun MyBookingsScreen(
                                 onCancel = {
                                     cancelingId = booking.trackingNumber
                                     bookingViewModel.cancelBooking(booking.trackingNumber)
-                                }
+                                },
+                                onClick = { onHotelClick(booking.hotelId) }
                             )
                         }
                     }
@@ -200,9 +217,11 @@ private fun BookingCard(
     booking: Booking,
     dateFormat: SimpleDateFormat,
     isCanceling: Boolean,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    onClick: () -> Unit
 ) {
     Card(
+        onClick = onClick,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = SoloWhite),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
