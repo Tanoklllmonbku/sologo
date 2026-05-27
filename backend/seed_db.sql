@@ -23,28 +23,29 @@ INSERT INTO users (nickname, email, passhash, role, phone_number) VALUES
 
 -- ========== ОТЕЛИ ==========
 -- Санкт-Петербург (city_id = 1)
-INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, status) VALUES
-('Отель "Северное небо"', 1, 'Невский пр-т, 88', 'Тихий дворик, завтрак, рядом метро', 4200, 5500, 4.5, 20, '["+7 (812) 123-45-67", "+7 (812) 234-56-78"]', '/static/hotels/north_sky.jpg', 1),
-('Хостел "Соло-лаунж"', 1, 'ул. Рубинштейна, 23', 'Капсулы и общая кухня', 1900, 5500, 4.2, 15, '["+7 (812) 345-67-89"]', '/static/hotels/solo_lounge.jpg', 1),
-('Отель "Эрмитаж"', 1, 'ул. Малая Морская, 14', 'Вид на Исаакиевский собор', 8500, 5500, 4.8, 30, '["+7 (812) 456-78-90", "+7 (812) 567-89-01"]', '/static/hotels/hermitage.jpg', 1);
+INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, room_images, status) VALUES
+('Отель "Северное небо"', 1, 'Невский пр-т, 88', 'Тихий дворик, завтрак, рядом метро', 4200, 5500, 4.5, 20, '["+7 (812) 123-45-67", "+7 (812) 234-56-78"]', '/static/main/1.png', ARRAY['/static/rooms/1_1.png', '/static/rooms/1_2.png', '/static/rooms/1_3.png'], 1),
+('Хостел "Соло-лаунж"', 1, 'ул. Рубинштейна, 23', 'Капсулы и общая кухня', 1900, 5500, 4.2, 15, '["+7 (812) 345-67-89"]', '/static/main/2.png', ARRAY['/static/rooms/2_1.png', '/static/rooms/2_2.png', '/static/rooms/2_3.png'], 1),
+('Отель "Эрмитаж"', 1, 'ул. Малая Морская, 14', 'Вид на Исаакиевский собор', 8500, 5500, 4.8, 30, '["+7 (812) 456-78-90", "+7 (812) 567-89-01"]', '/static/main/3.png', ARRAY['/static/rooms/3_1.png', '/static/rooms/3_2.png', '/static/rooms/3_3.png'], 1);
 
 -- Москва (city_id = 2)
-INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, status) VALUES
-('Отель "Красная площадь"', 2, 'ул. Никольская, 10', 'В центре Москвы', 12000, 7000, 4.7, 25, '["+7 (495) 123-45-67"]', '/static/hotels/red_square.jpg', 1),
-('Хостел "Центральный"', 2, 'Мясницкая ул., 15', 'Бюджетный вариант', 2500, 7000, 4.0, 40, '["+7 (495) 234-56-78", "+7 (495) 345-67-89"]', '/static/hotels/central_hostel.jpg', 1);
+INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, room_images, status) VALUES
+('Отель "Красная площадь"', 2, 'ул. Никольская, 10', 'В центре Москвы', 12000, 7000, 4.7, 25, '["+7 (495) 123-45-67"]', '/static/main/4.png', ARRAY['/static/rooms/4_1.png', '/static/rooms/4_2.png', '/static/rooms/4_3.png'], 1),
+('Хостел "Центральный"', 2, 'Мясницкая ул., 15', 'Бюджетный вариант', 2500, 7000, 4.0, 40, '["+7 (495) 234-56-78", "+7 (495) 345-67-89"]', '/static/main/5.png', ARRAY['/static/rooms/5_1.png', '/static/rooms/5_2.png', '/static/rooms/5_3.png'], 1);
 
 -- Казань (city_id = 3)
-INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, status) VALUES
-('Апарт "Казанская набережная"', 3, 'ул. Баумана, 45', 'Вид на воду, самостоятельное заселение', 3100, 4000, 4.4, 10, '["+7 (843) 123-45-67"]', '/static/hotels/kazan_apart.jpg', 1);
+INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, room_images, status) VALUES
+('Апарт "Казанская набережная"', 3, 'ул. Баумана, 45', 'Вид на воду, самостоятельное заселение', 3100, 4000, 4.4, 10, '["+7 (843) 123-45-67"]', '/static/main/6.png', ARRAY['/static/rooms/6_1.png', '/static/rooms/6_2.png', '/static/rooms/6_3.png'], 1);
 
 -- Сочи (city_id = 4)
-INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, status) VALUES
-('Отель "Горный ветер"', 4, 'ул. Нагорная, 12', 'Премиум-зона и бассейн', 6800, 5200, 4.6, 18, '["+7 (862) 123-45-67", "+7 (862) 234-56-78"]', '/static/hotels/mountain_wind.jpg', 1),
-('Мини-отель "У моря"', 4, 'ул. Приморская, 5', 'Рядом с пляжем', 3500, 5200, 4.3, 12, '["+7 (862) 345-67-89"]', '/static/hotels/sea_hotel.jpg', 1);
+INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, room_images, status) VALUES
+('Отель "Горный ветер"', 4, 'ул. Нагорная, 12', 'Премиум-зона и бассейн', 6800, 5200, 4.6, 18, '["+7 (862) 123-45-67", "+7 (862) 234-56-78"]', '/static/main/7.png', ARRAY['/static/rooms/7_1.png', '/static/rooms/7_2.png', '/static/rooms/7_3.png'], 1),
+('Мини-отель "У моря"', 4, 'ул. Приморская, 5', 'Рядом с пляжем', 3500, 5200, 4.3, 12, '["+7 (862) 345-67-89"]', '/static/main/8.png', ARRAY['/static/rooms/8_1.png', '/static/rooms/8_2.png', '/static/rooms/8_3.png'], 1);
 
 -- Калининград (city_id = 5)
-INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, status) VALUES
-('Мини-отель "Тихий двор"', 5, 'ул. Шевченко, 22', 'Семейный формат, завтраки', 2800, 4500, 4.5, 8, '["+7 (4012) 123-45-67"]', '/static/hotels/quiet_yard.jpg', 1);
+INSERT INTO hotels (name, city_id, address, description, price_per_night, avg_city_price, rating, capacity, manager_phones, main_image, room_images, status) VALUES
+('Мини-отель "Тихий двор"', 5, 'ул. Шевченко, 22', 'Семейный формат, завтраки', 2800, 4500, 4.5, 8, '["+7 (4012) 123-45-67"]', '/static/main/9.png', ARRAY['/static/rooms/9_1.png', '/static/rooms/9_2.png', '/static/rooms/9_3.png'], 1);
+
 -- ========== МАРШРУТЫ ==========
 INSERT INTO routes (title, description, mood, city_id, duration_hours, image) VALUES
 ('Утро у набережной', 'Кофе, прогулка вдоль воды, лёгкий завтрак', 'calm', 1, 3, '/static/routes/embankment.jpg'),
