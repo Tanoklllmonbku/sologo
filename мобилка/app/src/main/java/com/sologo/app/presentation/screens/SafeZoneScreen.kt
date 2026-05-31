@@ -1,4 +1,3 @@
-// presentation/screens/SafeZoneScreen.kt
 package com.sologo.app.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
@@ -32,8 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sologo.app.presentation.theme.SoloGreen
-import com.sologo.app.presentation.theme.SoloOffWhite
-import com.sologo.app.presentation.theme.SoloWhite
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.SafeZoneViewModel
 import com.sologo.app.utils.Result
@@ -46,57 +43,31 @@ fun SafeZoneScreen(
 ) {
     val safeZonesState by safeZoneViewModel.safeZonesState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        safeZoneViewModel.loadSafeZones()
-    }
+    LaunchedEffect(Unit) { safeZoneViewModel.loadSafeZones() }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Безопасные зоны") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
-                    }
-                },
+                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null) } },
                 colors = soloGoTopAppBarColors()
             )
         },
-        containerColor = SoloOffWhite
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         when (safeZonesState) {
-            is Result.Loading -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator(color = SoloGreen)
-                }
+            is Result.Loading -> Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                CircularProgressIndicator(color = SoloGreen)
             }
-
             is Result.Success -> {
                 val zones = (safeZonesState as Result.Success).data
-
-                LazyColumn(
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.padding(padding)
-                ) {
-                    items(zones, key = { it.id }) { zone ->
-                        SafeZoneCard(zone = zone)
-                    }
+                LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.padding(padding)) {
+                    items(zones, key = { it.id }) { zone -> SafeZoneCard(zone = zone) }
                 }
             }
-
-            is Result.Error -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text("Ошибка загрузки", color = MaterialTheme.colorScheme.error)
-                }
+            is Result.Error -> Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Ошибка загрузки", color = MaterialTheme.colorScheme.error)
             }
-
             else -> {}
         }
     }
@@ -104,44 +75,16 @@ fun SafeZoneScreen(
 
 @Composable
 private fun SafeZoneCard(zone: com.sologo.app.domain.model.SafeZone) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SoloWhite),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Card(shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Shield, contentDescription = null, tint = SoloGreen)
-                Text(
-                    text = zone.district,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = SoloGreen,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+                Icon(Icons.Default.Shield, null, tint = SoloGreen)
+                Text(zone.district, style = MaterialTheme.typography.titleMedium, color = SoloGreen, modifier = Modifier.padding(start = 8.dp))
             }
-
-            Text(
-                text = zone.cityName,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            Text(
-                text = "Уровень безопасности: ${zone.level.name}",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            if (!zone.note.isNullOrBlank()) {
-                Text(
-                    text = zone.note,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
+            Text(zone.cityName, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
+            Text("Уровень безопасности: ${zone.level.name}", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 8.dp))
+            if (!zone.note.isNullOrBlank()) Text(zone.note!!, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 8.dp))
         }
     }
 }

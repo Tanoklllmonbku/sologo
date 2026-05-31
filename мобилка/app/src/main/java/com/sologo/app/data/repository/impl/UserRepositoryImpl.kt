@@ -47,7 +47,14 @@ class UserRepositoryImpl(
         return try {
             val request = UserUpdatePasswordRequest(oldPassword, newPassword)
             val response = userApi.updatePassword(request)
-            Result.Success(UserMapper.toDomain(response))
+
+            if (response.isSuccessful) {
+                // После успешной смены пароля загружаем обновлённого пользователя
+                getProfile()  // ← возвращает Result<User>
+            } else {
+                val errorMsg = response.errorBody()?.string() ?: "Ошибка смены пароля"
+                Result.Error(errorMsg)
+            }
         } catch (e: IOException) {
             Result.Error("Ошибка сети: ${e.message}")
         } catch (e: Exception) {

@@ -25,23 +25,16 @@ class AuthViewModel(
     private val _registerState = MutableStateFlow<Result<com.sologo.app.domain.model.User>>(Result.Idle)
     val registerState: StateFlow<Result<com.sologo.app.domain.model.User>> = _registerState.asStateFlow()
 
+    private val _isLoggedIn = MutableStateFlow(authRepository.isLoggedIn())
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
+
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _loginState.value = Result.Loading
             val result = loginUseCase(email, password)
-            // Обработка 401 ошибки
-            _loginState.value = when (result) {
-                is Result.Error -> {
-                    val message = if (result.message.contains("401") ||
-                        result.message.contains("Unauthorized") ||
-                        result.message.contains("unauthorized")) {
-                        "Неверный email или пароль"
-                    } else {
-                        result.message
-                    }
-                    Result.Error(message)
-                }
-                else -> result
+            _loginState.value = result
+            if (result is Result.Success) {
+                _isLoggedIn.value = authRepository.isLoggedIn()  // ← ОБНОВЛЯЕМ
             }
         }
     }
@@ -57,6 +50,7 @@ class AuthViewModel(
     fun logout() {
         viewModelScope.launch {
             logoutUseCase()
+            _isLoggedIn.value = false  // ← ОБНОВЛЯЕМ ПОСЛЕ ВЫХОДА
         }
     }
 
@@ -65,7 +59,7 @@ class AuthViewModel(
         _registerState.value = Result.Idle
     }
 
-    fun isLoggedIn(): Boolean {
-        return authRepository.isLoggedIn()
+    fun checkAuthStatus() {
+        _isLoggedIn.value = authRepository.isLoggedIn()
     }
 }
