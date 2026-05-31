@@ -45,6 +45,9 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.foundation:foundation-layout:1.10.4")
+    implementation("androidx.compose.material3:material3:1.4.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     // Compose BOM
     val composeBom = platform("androidx.compose:compose-bom:2024.12.01")
     implementation(composeBom)

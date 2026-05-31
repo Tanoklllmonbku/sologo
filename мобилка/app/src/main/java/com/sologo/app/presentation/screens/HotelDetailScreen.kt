@@ -1,6 +1,6 @@
-// presentation/screens/HotelDetailScreen.kt
 package com.sologo.app.presentation.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,9 +24,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,12 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.sologo.app.presentation.theme.SoloGreen
-import com.sologo.app.presentation.theme.SoloOffWhite
-import com.sologo.app.presentation.theme.SoloWhite
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.BookingViewModel
 import com.sologo.app.presentation.viewmodel.HotelViewModel
-import com.sologo.app.utils.ImageUrlHelper
 import com.sologo.app.utils.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,116 +64,57 @@ fun HotelDetailScreen(
                 colors = soloGoTopAppBarColors()
             )
         },
-        containerColor = SoloOffWhite
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         when (hotelDetailState) {
             is Result.Loading -> {
-                androidx.compose.foundation.layout.Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(padding),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(color = SoloGreen)
                 }
             }
-
             is Result.Success -> {
                 val hotel = (hotelDetailState as Result.Success).data
-
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp)
+                    modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(16.dp)
                 ) {
-                    // Основное фото
                     AsyncImage(
-                        model = ImageUrlHelper.toFullImageUrl(hotel.mainImage) ?: ImageUrlHelper.toFullImageUrl(hotel.roomImages?.firstOrNull()),
+                        model = hotel.mainImage ?: hotel.roomImages,
                         contentDescription = hotel.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(220.dp)
-                            .clip(RoundedCornerShape(16.dp)),
+                        modifier = Modifier.fillMaxWidth().height(220.dp).clip(RoundedCornerShape(16.dp)),
                         contentScale = ContentScale.Crop
                     )
-
-                    Text(
-                        text = hotel.name,
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-
-                    Text(
-                        text = "${hotel.cityName} · ${hotel.address}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Text(
-                        text = "${hotel.pricePerNight} ₽ за ночь · средняя по городу ${hotel.avgCityPrice} ₽",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(top = 12.dp)
-                    )
-
-                    Text(
-                        text = "Вместимость: до ${hotel.capacity} гостей",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-
-                    if (hotel.rating > 0) {
-                        Text(
-                            text = "Рейтинг: ★ ${hotel.rating}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                    }
-
-                    if (!hotel.description.isNullOrBlank()) {
-                        Text(
-                            text = hotel.description,
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                    }
-
+                    Text(hotel.name, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = 16.dp))
+                    Text("${hotel.cityName} · ${hotel.address}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("${hotel.pricePerNight} ₽ за ночь · средняя по городу ${hotel.avgCityPrice} ₽", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = 12.dp))
+                    Text("Вместимость: до ${hotel.capacity} гостей", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 8.dp))
+                    if (hotel.rating > 0) Text("Рейтинг: ★ ${hotel.rating}", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
+                    if (!hotel.description.isNullOrBlank()) Text(hotel.description!!, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = 16.dp))
                     Button(
                         onClick = { onCreateBooking(hotel.id) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 24.dp),
+                        modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = SoloGreen),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Text("Забронировать", color = androidx.compose.ui.graphics.Color.White)
+                        Text("Забронировать", color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }
-
             is Result.Error -> {
-                androidx.compose.foundation.layout.Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(padding),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = (hotelDetailState as Result.Error).message,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                        Button(
-                            onClick = { hotelViewModel.loadHotelDetail(hotelId) },
-                            modifier = Modifier.padding(top = 16.dp)
-                        ) {
+                        Text((hotelDetailState as Result.Error).message, color = MaterialTheme.colorScheme.error)
+                        Button(onClick = { hotelViewModel.loadHotelDetail(hotelId) }, modifier = Modifier.padding(top = 16.dp)) {
                             Text("Повторить")
                         }
                     }
                 }
             }
-
             else -> {}
         }
     }

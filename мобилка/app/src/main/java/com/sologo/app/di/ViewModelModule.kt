@@ -10,7 +10,7 @@ val viewModelModule = module {
     viewModel { AuthViewModel(get(), get(), get(), get<AuthRepository>()) }
 
     // User
-    viewModel { UserViewModel(get(), get(), get()) }
+    viewModel { UserViewModel(get(), get(), get(), get<AuthRepository>()) }
 
     // Hotel
     viewModel { HotelViewModel(get(), get()) }
@@ -20,6 +20,9 @@ val viewModelModule = module {
 
     // City
     viewModel { CityViewModel(get(), get()) }
+
+    // CityDetail - ДОБАВИТЬ
+    viewModel { CityDetailViewModel(get(), get(), get(), get()) }
 
     // Route
     viewModel { RouteViewModel(get(), get()) }

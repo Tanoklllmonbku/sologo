@@ -1,4 +1,3 @@
-// presentation/screens/HomeScreen.kt
 package com.sologo.app.presentation.screens
 
 import androidx.compose.foundation.background
@@ -22,14 +21,11 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Hotel
 import androidx.compose.material.icons.filled.LocationCity
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -39,14 +35,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sologo.app.presentation.theme.SoloGreen
-import com.sologo.app.presentation.theme.SoloOffWhite
-import com.sologo.app.presentation.theme.SoloWhite
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 
 private data class HomeTile(
@@ -64,8 +57,8 @@ fun HomeScreen(
     onHotels: () -> Unit,
     onCities: () -> Unit,
     onSafeZones: () -> Unit,
-    onWeather: () -> Unit,
-    onProfile: () -> Unit,
+    onNavigateToLogin: () -> Unit = {},
+    onNavigateToRegister: () -> Unit = {}
 ) {
     val tiles = listOf(
         HomeTile("Отели", "Найди идеальное место", Icons.Default.Hotel, onHotels),
@@ -73,7 +66,6 @@ fun HomeScreen(
         HomeTile("Бронирования", "Твои поездки", Icons.Default.Bookmark, onBookings),
         HomeTile("Города", "Куда поехать", Icons.Default.LocationCity, onCities),
         HomeTile("Безопасность", "Безопасные зоны", Icons.Default.Shield, onSafeZones),
-        HomeTile("Погода", "Прогноз", Icons.Default.WbSunny, onWeather),
     )
 
     Scaffold(
@@ -87,25 +79,15 @@ fun HomeScreen(
                         color = SoloGreen
                     )
                 },
-                actions = {
-                    // Иконка профиля/личного кабинета
-                    IconButton(onClick = onProfile) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Личный кабинет",
-                            tint = SoloGreen
-                        )
-                    }
-                },
-                colors = soloGoTopAppBarColors(),
+                colors = soloGoTopAppBarColors()
             )
         },
-        containerColor = SoloOffWhite
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(SoloOffWhite)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(padding)
                 .padding(horizontal = 20.dp),
         ) {
@@ -136,7 +118,7 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(20.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = SoloWhite
+                            containerColor = MaterialTheme.colorScheme.surface
                         ),
                         elevation = CardDefaults.cardElevation(
                             defaultElevation = 2.dp,

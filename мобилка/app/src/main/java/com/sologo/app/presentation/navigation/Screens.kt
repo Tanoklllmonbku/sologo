@@ -1,5 +1,6 @@
-// presentation/navigation/Screens.kt
 package com.sologo.app.presentation.navigation
+
+import android.net.Uri
 
 sealed class Screen(val route: String) {
     // Auth
@@ -24,13 +25,22 @@ sealed class Screen(val route: String) {
 
     // Cities
     object CityList : Screen("cities")
+    object CityDetail : Screen("city/{cityId}/{cityName}") {
+        fun passId(cityId: Int, cityName: String): String = "city/$cityId/${Uri.encode(cityName)}"
+    }
 
     // Routes
     object RouteList : Screen("routes")
+    object RouteDetail : Screen("route/{routeId}") {
+        fun passId(routeId: Int): String = "route/$routeId"
+    }
 
     // Lost Report
     object LostReport : Screen("lost_report")
 
     // Safe Zones
     object SafeZones : Screen("safe_zones")
+
+    object Weather : Screen("weather")
+
 }
