@@ -47,6 +47,7 @@ import com.sologo.app.presentation.theme.SoloGreen
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.CityViewModel
 import com.sologo.app.presentation.viewmodel.HotelViewModel
+import com.sologo.app.utils.ImageUrlHelper
 import com.sologo.app.utils.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -152,11 +153,14 @@ private fun HotelCard(hotel: com.sologo.app.domain.model.Hotel, onClick: () -> U
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            if (hotel.mainImage != null) AsyncImage(
-                model = hotel.mainImage, contentDescription = hotel.name,
-                modifier = Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop
-            )
+            if (hotel.mainImage != null) {
+                AsyncImage(
+                    model = ImageUrlHelper.toFullImageUrl(hotel.mainImage),
+                    contentDescription = hotel.name,
+                    modifier = Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
             Text(hotel.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = if (hotel.mainImage != null) 12.dp else 0.dp))
             Text("${hotel.cityName} · ${hotel.pricePerNight} ₽/ночь", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
             Text("Вместимость: до ${hotel.capacity} гостей · Рейтинг: ★ ${hotel.rating}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
