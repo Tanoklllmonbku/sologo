@@ -1,6 +1,7 @@
 package com.sologo.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -72,6 +73,15 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
 
         // Главный экран с нижней навигацией
         composable("main") {
+            // ← ДОБАВЛЯЕМ ПРОВЕРКУ ПРИ ВХОДЕ НА ЭКРАН
+            LaunchedEffect(Unit) {
+                if (!isLoggedIn) {
+                    navController.navigate("login") {
+                        popUpTo("main") { inclusive = true }
+                    }
+                }
+            }
+
             MainScreen(
                 authViewModel = authViewModel,
                 userViewModel = userViewModel,
@@ -85,8 +95,9 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 themeManager = themeManager,
                 onLogout = {
                     authViewModel.logout()
+                    // Принудительно очищаем стек и идём на логин
                     navController.navigate("login") {
-                        popUpTo("main") { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )

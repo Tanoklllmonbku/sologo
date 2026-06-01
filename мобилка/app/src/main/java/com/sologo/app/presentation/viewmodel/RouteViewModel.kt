@@ -9,10 +9,8 @@ import com.sologo.app.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-// ← ДОБАВИТЬ ОПРЕДЕЛЕНИЕ RouteFilters
 data class RouteFilters(
     val cityName: String? = null,
     val mood: String? = null,
@@ -25,74 +23,81 @@ class RouteViewModel(
     private val getRouteByIdUseCase: GetRouteByIdUseCase
 ) : ViewModel() {
 
-    // ← ДОБАВИТЬ ДЛЯ ФИЛЬТРАЦИИ
-    private val _allRoutes = MutableStateFlow<List<Route>>(emptyList())
-    private val _filters = MutableStateFlow(RouteFilters())
+    private var allRoutes: List<Route> = emptyList()
 
     private val _filteredRoutes = MutableStateFlow<Result<List<Route>>>(Result.Idle)
     val filteredRoutes: StateFlow<Result<List<Route>>> = _filteredRoutes.asStateFlow()
 
+    private val _filters = MutableStateFlow(RouteFilters())
     val filters: StateFlow<RouteFilters> = _filters.asStateFlow()
 
     private val _routeDetailState = MutableStateFlow<Result<Route>>(Result.Idle)
     val routeDetailState: StateFlow<Result<Route>> = _routeDetailState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            combine(_allRoutes, _filters) { routes, filters ->
-                applyFilters(routes, filters)
-            }.collect { filtered ->
-                _filteredRoutes.value = Result.Success(filtered)
-            }
-        }
-    }
 
     fun loadRoutes(cityId: Int? = null, mood: String? = null) {
         viewModelScope.launch {
             _filteredRoutes.value = Result.Loading
             val result = getRoutesUseCase(cityId, mood)
             if (result is Result.Success) {
-                _allRoutes.value = result.data
+                allRoutes = result.data
+                applyFilters()
             } else if (result is Result.Error) {
                 _filteredRoutes.value = result
             }
         }
     }
 
-    // ← ДОБАВИТЬ МЕТОДЫ ДЛЯ ФИЛЬТРОВ
+    fun refreshRoutes() {
+        viewModelScope.launch {
+            _filteredRoutes.value = Result.Loading
+            val result = getRoutesUseCase(cityId = null, mood = null)
+            if (result is Result.Success) {
+                allRoutes = result.data
+                applyFilters()
+            } else if (result is Result.Error) {
+                _filteredRoutes.value = result
+            }
+        }
+    }
+
     fun updateFilters(newFilters: RouteFilters) {
         _filters.value = newFilters
+        applyFilters()
     }
 
     fun clearFilters() {
         _filters.value = RouteFilters()
+        applyFilters()
     }
 
-    private fun applyFilters(routes: List<Route>, filters: RouteFilters): List<Route> {
-        return routes.filter { route ->
+    private fun applyFilters() {
+        val currentFilters = _filters.value
+        val filtered = allRoutes.filter { route ->
             var matches = true
 
-            filters.cityName?.let { city ->
+            currentFilters.cityName?.let { city ->
                 if (!route.cityName.contains(city, ignoreCase = true)) {
                     matches = false
                 }
             }
 
-            filters.mood?.let { mood ->
+            currentFilters.mood?.let { mood ->
                 if (!route.mood.name.equals(mood, ignoreCase = true)) {
                     matches = false
                 }
             }
 
-            filters.minDuration?.let { min ->
+            currentFilters.minDuration?.let { min ->
                 if (route.durationHours < min) matches = false
             }
-            filters.maxDuration?.let { max ->
+
+            currentFilters.maxDuration?.let { max ->
                 if (route.durationHours > max) matches = false
             }
 
             matches
         }
+        _filteredRoutes.value = Result.Success(filtered)
     }
 
     fun loadRouteById(routeId: Int) {
@@ -101,5 +106,12 @@ class RouteViewModel(
             val result = getRouteByIdUseCase(routeId)
             _routeDetailState.value = result
         }
+    }
+
+    fun clearState() {
+        _filteredRoutes.value = Result.Idle
+        _routeDetailState.value = Result.Idle
+        allRoutes = emptyList()
+        _filters.value = RouteFilters()
     }
 }

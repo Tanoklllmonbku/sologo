@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,7 +58,17 @@ fun RouteListScreen(
     val filters by routeViewModel.filters.collectAsStateWithLifecycle()
     var showFilters by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) { routeViewModel.loadRoutes() }
+    // Загружаем данные при первом входе
+    LaunchedEffect(Unit) {
+        routeViewModel.refreshRoutes()
+    }
+
+    // Сбрасываем состояние при выходе с экрана
+    DisposableEffect(Unit) {
+        onDispose {
+            routeViewModel.clearState()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -81,7 +92,9 @@ fun RouteListScreen(
                 }
             }
             when (filteredRoutesState) {
-                is Result.Loading -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = SoloGreen) }
+                is Result.Loading -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = SoloGreen)
+                }
                 is Result.Success -> {
                     val routes = (filteredRoutesState as Result.Success).data
                     if (routes.isEmpty()) {
@@ -100,7 +113,7 @@ fun RouteListScreen(
                 is Result.Error -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text((filteredRoutesState as Result.Error).message, color = MaterialTheme.colorScheme.error)
-                        TextButton(onClick = { routeViewModel.loadRoutes() }) { Text("Повторить") }
+                        TextButton(onClick = { routeViewModel.refreshRoutes() }) { Text("Повторить") }
                     }
                 }
                 else -> {}
