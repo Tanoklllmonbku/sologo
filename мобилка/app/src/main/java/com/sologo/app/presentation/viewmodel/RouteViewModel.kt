@@ -34,6 +34,9 @@ class RouteViewModel(
     private val _routeDetailState = MutableStateFlow<Result<Route>>(Result.Idle)
     val routeDetailState: StateFlow<Result<Route>> = _routeDetailState.asStateFlow()
 
+    // Флаг для предотвращения повторной загрузки
+    private var isLoaded = false
+
     fun loadRoutes(cityId: Int? = null, mood: String? = null) {
         viewModelScope.launch {
             _filteredRoutes.value = Result.Loading
@@ -54,6 +57,7 @@ class RouteViewModel(
             if (result is Result.Success) {
                 allRoutes = result.data
                 applyFilters()
+                isLoaded = true
             } else if (result is Result.Error) {
                 _filteredRoutes.value = result
             }
@@ -108,10 +112,7 @@ class RouteViewModel(
         }
     }
 
-    fun clearState() {
-        _filteredRoutes.value = Result.Idle
+    fun clearRouteDetailState() {
         _routeDetailState.value = Result.Idle
-        allRoutes = emptyList()
-        _filters.value = RouteFilters()
     }
 }

@@ -12,8 +12,19 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.getKoin
+import com.sologo.app.domain.model.UserRole
+import com.sologo.app.presentation.admin.screens.AdminBookingsScreen
+import com.sologo.app.presentation.admin.screens.AdminDashboardScreen
+import com.sologo.app.presentation.admin.screens.AdminHotelsScreen
+import com.sologo.app.presentation.admin.screens.AdminRoutesScreen
+import com.sologo.app.presentation.admin.screens.AdminSafeZonesScreen
+import com.sologo.app.presentation.admin.screens.AdminUsersScreen
 import com.sologo.app.presentation.screens.*
+import com.sologo.app.presentation.screens.admin.*
 import com.sologo.app.presentation.viewmodel.*
+import com.sologo.app.presentation.admin.viewmodel.*
+import com.sologo.app.presentation.viewmodel.admin.AdminBookingViewModel
+import com.sologo.app.presentation.viewmodel.admin.AdminHotelsViewModel
 import com.sologo.app.utils.ThemeManager
 
 @Composable
@@ -32,19 +43,39 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
     val weatherViewModel: WeatherViewModel = koinViewModel()
     val themeManager: ThemeManager = getKoin().get()
 
+    // Admin ViewModels
+    val adminCityViewModel: AdminCityViewModel = koinViewModel()
+    val adminHotelsViewModel: AdminHotelsViewModel = koinViewModel()
+    val adminRouteViewModel: AdminRouteViewModel = koinViewModel()
+    val adminSafeZoneViewModel: AdminSafeZoneViewModel = koinViewModel()
+    val adminBookingViewModel: AdminBookingViewModel = koinViewModel()
+    val adminUserViewModel: AdminUserViewModel = koinViewModel()
+
     val isLoggedIn by authViewModel.isLoggedIn.collectAsStateWithLifecycle()
+    val currentUser by authViewModel.currentUser.collectAsStateWithLifecycle()
+    val isAdmin = currentUser?.role == UserRole.ADMIN
+
+    // Определяем стартовый экран
+    val startDestination = when {
+        !isLoggedIn -> "login"
+        isAdmin -> "admin_dashboard"
+        else -> "main"
+    }
 
     NavHost(
         navController = navController,
-        startDestination = if (isLoggedIn) "main" else "login",
+        startDestination = startDestination,
         modifier = modifier
     ) {
-        // Экран логина
+        // ========== ЭКРАНЫ АВТОРИЗАЦИИ ==========
+
         composable("login") {
             LoginScreen(
                 authViewModel = authViewModel,
                 onLoginSuccess = {
-                    navController.navigate("main") {
+                    // После входа проверяем роль и направляем на нужный экран
+                    val destination = if (isAdmin) "admin_dashboard" else "main"
+                    navController.navigate(destination) {
                         popUpTo("login") { inclusive = true }
                     }
                 },
@@ -54,7 +85,6 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        // Экран регистрации
         composable("register") {
             RegisterScreen(
                 authViewModel = authViewModel,
@@ -71,9 +101,9 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        // Главный экран с нижней навигацией
+        // ========== ОСНОВНОЙ UI (ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ) ==========
+
         composable("main") {
-            // ← ДОБАВЛЯЕМ ПРОВЕРКУ ПРИ ВХОДЕ НА ЭКРАН
             LaunchedEffect(Unit) {
                 if (!isLoggedIn) {
                     navController.navigate("login") {
@@ -89,21 +119,25 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 bookingViewModel = bookingViewModel,
                 cityViewModel = cityViewModel,
                 routeViewModel = routeViewModel,
-                lostViewModel = lostViewModel,
                 safeZoneViewModel = safeZoneViewModel,
                 weatherViewModel = weatherViewModel,
                 themeManager = themeManager,
                 onLogout = {
                     authViewModel.logout()
-                    // Принудительно очищаем стек и идём на логин
                     navController.navigate("login") {
                         popUpTo(0) { inclusive = true }
+                    }
+                },
+                onNavigateToAdmin = {
+                    if (isAdmin) {
+                        navController.navigate("admin_dashboard")
                     }
                 }
             )
         }
 
-        // Остальные экраны...
+        // ========== ПОЛЬЗОВАТЕЛЬСКИЕ ЭКРАНЫ ==========
+
         composable("my_bookings") {
             MyBookingsScreen(
                 bookingViewModel = bookingViewModel,
@@ -146,7 +180,7 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 cityViewModel = cityViewModel,
                 onBack = { navController.popBackStack() },
                 onCityClick = { cityId: Int, cityName: String ->
-                    navController.navigate("city_detail/$cityId/${cityName}")
+                    navController.navigate("city_detail/$cityId/$cityName")
                 }
             )
         }
@@ -165,7 +199,6 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        // Экран детали отеля
         composable(
             route = "hotel_detail/{hotelId}",
             arguments = listOf(navArgument("hotelId") { type = NavType.IntType })
@@ -182,7 +215,6 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        // Экран создания бронирования
         composable(
             route = "create_booking/{hotelId}",
             arguments = listOf(navArgument("hotelId") { type = NavType.IntType })
@@ -199,7 +231,6 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        // Экран детали города
         composable(
             route = "city_detail/{cityId}/{cityName}",
             arguments = listOf(
@@ -225,7 +256,6 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        // Экран детали маршрута
         composable(
             route = "route_detail/{routeId}",
             arguments = listOf(navArgument("routeId") { type = NavType.IntType })
@@ -235,6 +265,74 @@ fun SoloGoNavHost(modifier: Modifier = Modifier) {
                 routeId = routeId,
                 routeViewModel = routeViewModel,
                 onBack = { navController.popBackStack() }
+            )
+        }
+
+        // ========== ADMIN ЭКРАНЫ ==========
+
+        composable("admin_dashboard") {
+            LaunchedEffect(Unit) {
+                if (!isAdmin) {
+                    navController.navigate("main") {
+                        popUpTo("admin_dashboard") { inclusive = true }
+                    }
+                }
+            }
+
+            AdminDashboardScreen(
+                onNavigate = { route ->
+                    when (route) {
+                        "logout" -> {
+                            authViewModel.logout()
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                        else -> navController.navigate(route)
+                    }
+                }
+            )
+        }
+
+        composable("admin_cities") {
+            AdminCitiesScreen(
+                viewModel = adminCityViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("admin_hotels") {
+            AdminHotelsScreen(
+                viewModel = adminHotelsViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("admin_bookings") {
+            AdminBookingsScreen(
+                viewModel = adminBookingViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("admin_routes") {
+            AdminRoutesScreen(
+                viewModel = adminRouteViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("admin_safe_zones") {
+            AdminSafeZonesScreen(
+                viewModel = adminSafeZoneViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("admin_users") {
+            AdminUsersScreen(
+                viewModel = adminUserViewModel,
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }

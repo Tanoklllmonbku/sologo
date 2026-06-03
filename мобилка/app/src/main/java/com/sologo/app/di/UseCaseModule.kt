@@ -45,7 +45,7 @@ import org.koin.dsl.module
 val useCaseModule = module {
 
     // ========== AUTH ==========
-    factory { LoginUseCase(get()) }
+    factory { LoginUseCase(get(), get()) }  // ← два параметра
     factory { RegisterUseCase(get()) }
     factory { LogoutUseCase(get()) }
     factory { IsLoggedInUseCase(get()) }

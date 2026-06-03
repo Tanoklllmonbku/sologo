@@ -2,40 +2,34 @@ package com.sologo.app.di
 
 import com.sologo.app.domain.repository.AuthRepository
 import com.sologo.app.presentation.viewmodel.*
+import com.sologo.app.presentation.admin.viewmodel.AdminCityViewModel
+import com.sologo.app.presentation.admin.viewmodel.AdminRouteViewModel
+import com.sologo.app.presentation.admin.viewmodel.AdminSafeZoneViewModel
+import com.sologo.app.presentation.admin.viewmodel.AdminUserViewModel
+import com.sologo.app.presentation.viewmodel.admin.AdminBookingViewModel
+import com.sologo.app.presentation.viewmodel.admin.AdminHotelsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    // Auth
+    // User ViewModels (существующие)
     viewModel { AuthViewModel(get(), get(), get(), get<AuthRepository>()) }
-
-    // User
     viewModel { UserViewModel(get(), get(), get(), get<AuthRepository>()) }
-
-    // Hotel
     viewModel { HotelViewModel(get(), get()) }
-
-    // Booking
     viewModel { BookingViewModel(get(), get(), get(), get()) }
-
-    // City
     viewModel { CityViewModel(get(), get()) }
-
-    // CityDetail - ДОБАВИТЬ
     viewModel { CityDetailViewModel(get(), get(), get(), get()) }
-
-    // Route
     viewModel { RouteViewModel(get(), get()) }
-
-    // Lost
     viewModel { LostViewModel(get(), get()) }
-
-    // SafeZone
     viewModel { SafeZoneViewModel(get()) }
-
-    // Weather
     viewModel { WeatherViewModel(get()) }
-
-    // Admin
     viewModel { AdminViewModel(get(), get(), get(), get(), get(), get(), get()) }
+
+    /// ========== ADMIN VIEW MODELS ==========
+    viewModel { AdminCityViewModel(get(), get(), get(), get()) }
+    viewModel { AdminHotelsViewModel(get(), get(), get(), get(), get(), get()) }  // ← ДОБАВИТЬ
+    viewModel { AdminBookingViewModel(get(), get()) }
+    viewModel { AdminRouteViewModel(get(), get(), get(), get(), get()) }
+    viewModel { AdminSafeZoneViewModel(get(), get(), get(), get(), get()) }
+    viewModel { AdminUserViewModel(get(), get()) }
 }

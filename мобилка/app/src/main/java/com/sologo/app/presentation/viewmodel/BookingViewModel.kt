@@ -52,6 +52,10 @@ class BookingViewModel(
         }
     }
 
+    fun clearCreateBookingState() {
+        _createBookingState.value = Result.Idle
+    }
+
     fun cancelBooking(trackingNumber: String) {
         viewModelScope.launch {
             _cancelState.value = Result.Loading
