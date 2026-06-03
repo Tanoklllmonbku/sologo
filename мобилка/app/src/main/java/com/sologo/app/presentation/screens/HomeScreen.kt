@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Hotel
@@ -26,12 +27,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,33 +44,49 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sologo.app.domain.model.UserRole
 import com.sologo.app.presentation.theme.SoloGreen
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
+import com.sologo.app.presentation.viewmodel.AuthViewModel
 
 private data class HomeTile(
     val title: String,
     val subtitle: String,
     val icon: ImageVector,
-    val onClick: () -> Unit,
+    val onClick: () -> Unit
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    authViewModel: AuthViewModel,
     onBookings: () -> Unit,
     onRoutes: () -> Unit,
     onHotels: () -> Unit,
     onCities: () -> Unit,
     onSafeZones: () -> Unit,
+    onNavigateToAdmin: () -> Unit,
     onNavigateToLogin: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {}
 ) {
+    val currentUser by authViewModel.currentUser.collectAsStateWithLifecycle()
+    val isAdmin = currentUser?.role == UserRole.ADMIN
+
+    // Логирование
+    LaunchedEffect(currentUser) {
+        android.util.Log.d("HOMESCREEN", "currentUser = $currentUser")
+        android.util.Log.d("HOMESCREEN", "currentUser?.role = ${currentUser?.role}")
+        android.util.Log.d("HOMESCREEN", "isAdmin = $isAdmin")
+        android.util.Log.d("HOMESCREEN", "UserRole.ADMIN = ${UserRole.ADMIN}")
+    }
+
     val tiles = listOf(
         HomeTile("Отели", "Найди идеальное место", Icons.Default.Hotel, onHotels),
         HomeTile("Маршруты", "Под настроение", Icons.Default.Explore, onRoutes),
         HomeTile("Бронирования", "Твои поездки", Icons.Default.Bookmark, onBookings),
         HomeTile("Города", "Куда поехать", Icons.Default.LocationCity, onCities),
-        HomeTile("Безопасность", "Безопасные зоны", Icons.Default.Shield, onSafeZones),
+        HomeTile("Безопасность", "Безопасные зоны", Icons.Default.Shield, onSafeZones)
     )
 
     Scaffold(
@@ -79,7 +100,19 @@ fun HomeScreen(
                         color = SoloGreen
                     )
                 },
-                colors = soloGoTopAppBarColors()
+                colors = soloGoTopAppBarColors(),
+                actions = {
+                    android.util.Log.d("HOMESCREEN", "TopAppBar actions: isAdmin = $isAdmin")
+                    if (isAdmin) {
+                        IconButton(onClick = onNavigateToAdmin) {
+                            Icon(
+                                Icons.Default.AdminPanelSettings,
+                                contentDescription = "Админ-панель",
+                                tint = SoloGreen
+                            )
+                        }
+                    }
+                }
             )
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -152,7 +185,8 @@ fun HomeScreen(
                                 text = tile.title,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Text(

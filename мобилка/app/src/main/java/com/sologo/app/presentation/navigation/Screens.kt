@@ -42,5 +42,12 @@ sealed class Screen(val route: String) {
     object SafeZones : Screen("safe_zones")
 
     object Weather : Screen("weather")
-
+    object AdminPanel : Screen("admin_panel")
+    object AdminDashboard : Screen("admin_dashboard")
+    object AdminCities : Screen("admin_cities")
+    object AdminHotels : Screen("admin_hotels")
+    object AdminBookings : Screen("admin_bookings")
+    object AdminRoutes : Screen("admin_routes")
+    object AdminSafeZones : Screen("admin_safe_zones")
+    object AdminUsers : Screen("admin_users")
 }

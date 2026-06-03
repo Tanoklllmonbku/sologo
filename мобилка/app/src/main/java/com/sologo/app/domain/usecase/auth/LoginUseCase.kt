@@ -1,11 +1,14 @@
 package com.sologo.app.domain.usecase.auth
 
 import android.util.Patterns
+import com.sologo.app.domain.model.User
 import com.sologo.app.domain.repository.AuthRepository
+import com.sologo.app.domain.repository.UserRepository
 import com.sologo.app.utils.Result
 
 class LoginUseCase(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository  // ← добавить зависимость
 ) {
     suspend operator fun invoke(email: String, password: String): Result<String> {
         if (email.isBlank()) {
@@ -21,5 +24,10 @@ class LoginUseCase(
             return Result.Error("Пароль должен быть минимум 6 символов")
         }
         return authRepository.login(email, password)
+    }
+
+    // ← ДОБАВИТЬ МЕТОД
+    suspend fun getCurrentUser(): Result<User> {
+        return userRepository.getProfile()
     }
 }

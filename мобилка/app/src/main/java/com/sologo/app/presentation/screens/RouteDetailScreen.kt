@@ -41,6 +41,7 @@ import coil.compose.AsyncImage
 import com.sologo.app.presentation.theme.SoloGreen
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.RouteViewModel
+import com.sologo.app.utils.ImageUrlHelper
 import com.sologo.app.utils.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,8 +97,19 @@ fun RouteDetailScreen(
                     modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (route.image != null) AsyncImage(model = route.image, contentDescription = route.title,
-                        modifier = Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(16.dp)), contentScale = ContentScale.Crop)
+                    // Фото маршрута с ImageUrlHelper
+                    if (route.image != null) {
+                        AsyncImage(
+                            model = ImageUrlHelper.toFullImageUrl(route.image),
+                            contentDescription = route.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .clip(RoundedCornerShape(16.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                     Text(route.title, style = MaterialTheme.typography.headlineMedium, color = SoloGreen, modifier = Modifier.padding(top = if (route.image != null) 16.dp else 0.dp))
                     Text(route.cityName, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(modifier = Modifier.height(16.dp))

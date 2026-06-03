@@ -2,6 +2,7 @@ package com.sologo.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sologo.app.domain.model.User
 import com.sologo.app.domain.repository.AuthRepository
 import com.sologo.app.domain.usecase.auth.LoginUseCase
 import com.sologo.app.domain.usecase.auth.LogoutUseCase
@@ -28,13 +29,19 @@ class AuthViewModel(
     private val _isLoggedIn = MutableStateFlow(authRepository.isLoggedIn())
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
+    // ← ДОБАВИТЬ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
+    private val _currentUser = MutableStateFlow<User?>(null)
+    val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
+
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _loginState.value = Result.Loading
             val result = loginUseCase(email, password)
             _loginState.value = result
             if (result is Result.Success) {
-                _isLoggedIn.value = authRepository.isLoggedIn()  // ← ОБНОВЛЯЕМ
+                _isLoggedIn.value = authRepository.isLoggedIn()
+                // Загружаем пользователя после входа
+                loadCurrentUser()
             }
         }
     }
@@ -50,7 +57,8 @@ class AuthViewModel(
     fun logout() {
         viewModelScope.launch {
             logoutUseCase()
-            _isLoggedIn.value = false  // ← ОБНОВЛЯЕМ ПОСЛЕ ВЫХОДА
+            _isLoggedIn.value = false
+            _currentUser.value = null
         }
     }
 
@@ -61,5 +69,18 @@ class AuthViewModel(
 
     fun checkAuthStatus() {
         _isLoggedIn.value = authRepository.isLoggedIn()
+        if (_isLoggedIn.value) {
+            loadCurrentUser()
+        }
+    }
+
+    // ← ДОБАВИТЬ ЗАГРУЗКУ ПОЛЬЗОВАТЕЛЯ
+    fun loadCurrentUser() {
+        viewModelScope.launch {
+            val result = loginUseCase.getCurrentUser()
+            if (result is Result.Success) {
+                _currentUser.value = result.data
+            }
+        }
     }
 }

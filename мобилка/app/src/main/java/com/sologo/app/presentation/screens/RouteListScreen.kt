@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +43,7 @@ import com.sologo.app.presentation.theme.SoloGreen
 import com.sologo.app.presentation.theme.soloGoTopAppBarColors
 import com.sologo.app.presentation.viewmodel.CityViewModel
 import com.sologo.app.presentation.viewmodel.RouteViewModel
+import com.sologo.app.utils.ImageUrlHelper
 import com.sologo.app.utils.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,16 +58,8 @@ fun RouteListScreen(
     val filters by routeViewModel.filters.collectAsStateWithLifecycle()
     var showFilters by remember { mutableStateOf(false) }
 
-    // Загружаем данные при первом входе
     LaunchedEffect(Unit) {
         routeViewModel.refreshRoutes()
-    }
-
-    // Сбрасываем состояние при выходе с экрана
-    DisposableEffect(Unit) {
-        onDispose {
-            routeViewModel.clearState()
-        }
     }
 
     Scaffold(
@@ -132,8 +124,18 @@ private fun RouteCard(route: com.sologo.app.domain.model.Route, onClick: () -> U
     Card(onClick = onClick, shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            if (route.image != null) AsyncImage(model = route.image, contentDescription = route.title,
-                modifier = Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(12.dp)), contentScale = ContentScale.Crop)
+            // Фото маршрута с ImageUrlHelper
+            if (route.image != null) {
+                AsyncImage(
+                    model = ImageUrlHelper.toFullImageUrl(route.image),
+                    contentDescription = route.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
             Text(route.title, style = MaterialTheme.typography.titleLarge, color = SoloGreen, modifier = Modifier.padding(top = if (route.image != null) 12.dp else 0.dp))
             Text("${route.cityName} · ${route.durationHours} ч · ${route.mood.name}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
             Text(route.description ?: "", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 8.dp), maxLines = 3)

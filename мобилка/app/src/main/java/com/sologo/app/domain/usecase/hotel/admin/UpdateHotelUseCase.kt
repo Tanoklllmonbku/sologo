@@ -16,7 +16,9 @@ class UpdateHotelUseCase(
         description: String? = null,
         rating: Double? = null,
         capacity: Int? = null,
-        status: Int? = null
+        status: Int? = null,
+        mainImage: String? = null,
+        roomImages: String? = null
     ): Result<HotelDetail> {
         if (hotelId <= 0) {
             return Result.Error("Неверный ID отеля")
